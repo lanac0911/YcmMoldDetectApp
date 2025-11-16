@@ -1,19 +1,17 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text } from 'tamagui';
 
 const Home = () => {
   return (
     <View
-      style={{
-        backgroundColor: '#df0',
-        width: 300,
-        height: 300,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '$4',
-      }}
+      flex={1}
+      alignItems="center"
+      justifyContent="center"
+      backgroundColor="$yellow10"
     >
-      <Text>Home View</Text>
+      <Text fontSize="$8" color="$color">
+        Home Page
+      </Text>
     </View>
   );
 };

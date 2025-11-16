@@ -1,21 +1,29 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text } from 'tamagui';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@navigation/AppNavigator';
 
-const Welcome = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'Welcome'>;
+
+export default function Welcome({ navigation }: Props) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Home'); // 不讓用戶返回 Welcome
+    }, 2500); // 2.5 秒，可改 2000~5000ms
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <View
-      style={{
-        backgroundColor: '#df0',
-        width: 300,
-        height: 300,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '$4',
-      }}
+      flex={1}
+      alignItems="center"
+      justifyContent="center"
+      backgroundColor="$yellow10"
     >
-      <Text>Welcome View</Text>
+      <Text fontSize="$8" color="$color">
+        Welcome
+      </Text>
     </View>
   );
-};
-
-export default Welcome;
+}
