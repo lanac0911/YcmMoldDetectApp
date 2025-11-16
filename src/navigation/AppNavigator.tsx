@@ -3,12 +3,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Welcome from '@screens/Welcome';
 import Camera from '@screens/Camera';
+import Result from '@screens/Result/ResultScreen';
 import Cart from '@screens/Cart';
 
 export type RootStackParamList = {
   Welcome: undefined;
   Home: undefined;
   Camera: undefined;
+  Result: {
+    imageUri: string;
+    isMoldy?: boolean;
+    confidence?: number;
+  };
   Cart: undefined;
 };
 
@@ -26,6 +32,7 @@ export default function AppNavigator() {
       >
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Camera" component={Camera} />
+        <Stack.Screen name="Result" component={Result} />
         <Stack.Screen
           name="Cart"
           component={Cart}

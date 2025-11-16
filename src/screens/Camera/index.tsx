@@ -40,6 +40,7 @@ export default function CameraScreen({ navigation }: Props) {
         setShowCamera={setShowCamera}
         loading={isLoading}
         setIsLoading={setIsLoading}
+        navigation={navigation}
       />
       {/* 購物車 Fab Button */}
       <Pressable

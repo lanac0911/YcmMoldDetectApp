@@ -9,6 +9,8 @@ import { useCameraPermission } from 'react-native-vision-camera';
 import { launchImageLibrary } from 'react-native-image-picker';
 import SafeArea from '@components/SafeArea';
 import { YCM_COLORS } from '@styles/imgs/themes';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@navigation/AppNavigator';
 
 interface PreviewSelectImgProps {
   selectedImage: string | null;
@@ -16,6 +18,10 @@ interface PreviewSelectImgProps {
   setShowCamera: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  navigation: NativeStackScreenProps<
+    RootStackParamList,
+    'Camera'
+  >['navigation'];
 }
 
 export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
@@ -24,6 +30,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
   setShowCamera,
   loading,
   setIsLoading,
+  navigation,
 }) => {
   const { hasPermission, requestPermission } = useCameraPermission();
 
@@ -68,6 +75,12 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
     }
 
     setIsLoading(true);
+
+    navigation.navigate('Result', {
+      imageUri: selectedImage,
+      isMoldy: true, // TODO
+      confidence: 0.87, // TODO
+    });
   };
 
   return (
