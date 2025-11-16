@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'tamagui';
 
-const Home = () => {
+const Cart = () => {
   return (
     <View
       flex={1}
@@ -10,10 +10,10 @@ const Home = () => {
       backgroundColor="$yellow10"
     >
       <Text fontSize="$8" color="$color">
-        Home Page
+        Cart Page
       </Text>
     </View>
   );
 };
 
-export default Home;
+export default Cart;

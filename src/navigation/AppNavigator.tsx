@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Welcome from '@screens/Welcome';
-import Home from '@screens/Home';
+import Camera from '@screens/Camera';
+import Cart from '@screens/Cart';
 
 export type RootStackParamList = {
   Welcome: undefined;
   Home: undefined;
+  Camera: undefined;
+  Cart: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -17,11 +20,20 @@ export default function AppNavigator() {
       <Stack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
-          headerShown: false, // 隱藏上方標題列
+          headerShown: false,
+          animation: 'slide_from_right',
         }}
       >
         <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Camera" component={Camera} />
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
+          options={{
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
