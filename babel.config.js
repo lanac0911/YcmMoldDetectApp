@@ -16,6 +16,7 @@ module.exports = {
           '@context': './src/context',
           '@store': './src/store',
           '@navigation': './src/navigation',
+          '@types': './src/types',
         },
       },
     ],
