@@ -3,6 +3,7 @@ declare module 'react-native-config' {
     BASE_URL_PREFIX: string;
     WOO_CONSUMER_KEY: string;
     WOO_CONSUMER_SECRET: string;
+    OPENAI_API_KEY: string;
   }
 
   const Config: NativeConfig;

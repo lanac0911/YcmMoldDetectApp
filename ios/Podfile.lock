@@ -1195,6 +1195,8 @@ PODS:
     - React-utils (= 0.74.2)
   - RNCAsyncStorage (2.2.0):
     - React-Core
+  - RNFS (2.20.0):
+    - React-Core
   - RNScreens (3.37.0):
     - DoubleConversion
     - glog
@@ -1289,6 +1291,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
@@ -1416,6 +1419,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -1484,12 +1489,13 @@ SPEC CHECKSUMS:
   React-utils: 08bb648cea0f37a0aa5df0c4f9ef50e5484ee0eb
   ReactCommon: 4968ff446d467c4def1945125e59f82e3e986af3
   RNCAsyncStorage: b44e8a4e798c3e1f56bffccd0f591f674fb9198f
+  RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNScreens: ef68e50aea531dd00c592ba4683bbcb89d4d2e1a
   RNSVG: 6ebe31273563567f36f6a871b989bca09cd3827b
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   VisionCamera: 030bcbf22791d698926e7c0e3b804126165e62e3
   Yoga: ae3c32c514802d30f687a04a6a35b348506d411f
 
-PODFILE CHECKSUM: 81db97e27fdf3af78ce6ab892c4eb56dd004f96a
+PODFILE CHECKSUM: 06824335240eff7db6f5df57cda0e0bc82606556
 
 COCOAPODS: 1.16.2
