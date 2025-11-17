@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { YStack, XStack, Text, Button } from 'tamagui';
 import { Plus, Minus } from '@tamagui/lucide-icons';
-import { Product } from '@types/product';
+import { Product } from '@typedef/product';
 import { useCartStore } from '@store/cartStore';
 import { YCM_COLORS } from '@styles/imgs/themes';
 

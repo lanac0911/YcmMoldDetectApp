@@ -1,7 +1,7 @@
 // src/screens/Result/hooks/useResultRenderers.tsx
 import React, { useCallback, useMemo } from 'react';
 import { YStack, Text, Button } from 'tamagui';
-import { Product } from '@types/product';
+import { Product } from '@typedef/product';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import ResultItem from '../components/ResultItem';
 import ProductCard from '../components/ProductCard';
@@ -27,7 +27,6 @@ export const useResultRenderers = ({
   nextPage,
   getProducts,
 }: UseResultRenderersProps) => {
-  // 🔥 ProductCard 不再需要 addToCart prop
   const renderProductItem = useCallback(({ item }: { item: Product }) => {
     return <ProductCard item={item} />;
   }, []);

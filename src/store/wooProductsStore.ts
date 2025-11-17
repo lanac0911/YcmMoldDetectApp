@@ -5,8 +5,8 @@ import {
   BASE_URL_PREFIX,
   handleApiRequest,
 } from '@services/apiManager';
-import { Product } from '@types/product';
-import { WooProduct } from '@types/productAPI';
+import { Product } from '@typedef/product';
+import { WooProduct } from '@typedef/productAPI';
 
 let cancelTokenSource = axios.CancelToken.source();
 

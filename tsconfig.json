@@ -30,8 +30,8 @@
       "@navigation/*": [
         "./src/navigation/*"
       ],
-      "@types/*": [
-        "./src/types/*"
+      "@typedef/*": [
+        "./src/typedef/*"
       ],
     }
   },
