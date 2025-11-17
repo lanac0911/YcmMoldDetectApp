@@ -1,13 +1,18 @@
 import React, { memo } from 'react';
-import { Dialog, XStack, YStack, Text, Image, Button } from 'tamagui';
+import { Dialog, XStack, YStack, Text, View, Button } from 'tamagui';
+import { Image, StyleSheet } from 'react-native';
 import {
   AlertCircle,
   CheckCircle,
+  HelpCircle,
   Heart,
   Trash2,
   X,
 } from '@tamagui/lucide-icons';
 import { DetectionRecord } from '@store/detectionHistoryStore';
+import { getConfidenceLevel } from '@utils/getConfidenceLevel';
+import { YCM_COLORS } from '@styles/imgs/themes';
+import ConfidenceResultCard from '@components/ConfidenceResultCard';
 
 interface Props {
   record: DetectionRecord | null | undefined;
@@ -26,6 +31,10 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
   onDelete,
   formatFullDate,
 }: Props) {
+  if (!record) return null;
+
+  const ui = getConfidenceLevel(record.confidence, record.isMoldy);
+
   return (
     <Dialog modal open={!!record} onOpenChange={open => !open && onClose()}>
       <Dialog.Portal>
@@ -35,7 +44,7 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
           enterStyle={{ opacity: 0 }}
           exitStyle={{ opacity: 0 }}
           opacity={0.5}
-          bg="rgba(0,0,0,0.5)"
+          backgroundColor="rgba(0,0,0,0.6)"
         />
 
         <Dialog.Content
@@ -43,91 +52,119 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
           animation={[
             'quick',
             {
-              opacity: {
-                overshootClamping: true,
-              },
-              scale: {
-                overshootClamping: true,
-              },
+              opacity: { overshootClamping: true },
+              scale: { overshootClamping: true },
             },
           ]}
-          enterStyle={{ opacity: 0, scale: 0.85 }}
-          exitStyle={{ opacity: 0, scale: 0.9 }}
+          enterStyle={{ opacity: 0, scale: 0.9, y: -20 }}
+          exitStyle={{ opacity: 0, scale: 0.95, y: 10 }}
           bordered
           elevate
-          br="$5"
-          w="90%"
+          borderRadius={20}
+          width="90%"
+          maxWidth={420}
+          backgroundColor="white"
+          padding="$4"
+          gap="$4"
         >
-          {record && (
-            <>
-              {/* Header */}
-              <XStack jc="space-between" ai="center">
-                <Text fontSize="$6" fontWeight="bold">
-                  檢測詳情
-                </Text>
-                <Dialog.Close asChild>
-                  <Button size="$2" circular onPress={onClose} icon={<X />} />
-                </Dialog.Close>
-              </XStack>
+          {/* Header */}
+          <XStack justifyContent="space-between" alignItems="center">
+            <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
+              檢測報告
+            </Text>
+            <Dialog.Close asChild>
+              <Button
+                size="$3"
+                circular
+                backgroundColor="$gray3"
+                icon={<X size={20} color="$gray10" />}
+                onPress={onClose}
+                pressStyle={{ backgroundColor: '$gray4', scale: 0.95 }}
+              />
+            </Dialog.Close>
+          </XStack>
 
-              {/* 圖片 */}
-              <YStack br="$4" overflow="hidden" mt="$3">
-                <Image
-                  source={{ uri: record.imageUri }}
-                  style={{ width: '100%', height: 260 }}
+          {/* 圖片 */}
+          <View
+            width="100%"
+            borderRadius={12}
+            overflow="hidden"
+            backgroundColor="$gray3"
+            borderWidth={3}
+            borderColor={ui.borderColor}
+          >
+            <Image
+              source={{ uri: record.imageUri }}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          </View>
+
+          {/* 結果 card */}
+          <ConfidenceResultCard
+            ui={ui}
+            confidence={record.confidence}
+            showSuggestion={false}
+          />
+
+          {/* 操作按鈕 */}
+          <XStack gap="$2">
+            {/* 收藏按鈕 */}
+            <Button
+              flex={1}
+              size="$4"
+              backgroundColor={isFavorite ? '#FEE2E2' : '$gray4'}
+              borderWidth={isFavorite ? 1 : 0}
+              borderColor={isFavorite ? '#FCA5A5' : 'transparent'}
+              icon={
+                <Heart
+                  size={20}
+                  color={isFavorite ? '#EF4444' : '#6B7280'}
+                  fill={isFavorite ? '#EF4444' : 'transparent'}
+                  strokeWidth={2}
                 />
-              </YStack>
-
-              {/* 結果 card */}
-              <YStack
-                p="$4"
-                mt="$3"
-                br="$4"
-                bg={record.isMoldy ? '$red3' : '$green3'}
-                borderWidth={2}
-                borderColor={record.isMoldy ? '$red8' : '$green8'}
+              }
+              onPress={onToggleFavorite}
+              pressStyle={{
+                backgroundColor: isFavorite ? '#FEE2E2' : '$gray5',
+                scale: 0.98,
+              }}
+            >
+              <Text
+                fontSize="$4"
+                fontWeight="600"
+                color={isFavorite ? '#DC2626' : '$gray11'}
               >
-                <XStack ai="center" gap="$2">
-                  {record.isMoldy ? (
-                    <AlertCircle size={28} color="$red10" />
-                  ) : (
-                    <CheckCircle size={28} color="$green10" />
-                  )}
+                {isFavorite ? '取消收藏' : '加入收藏'}
+              </Text>
+            </Button>
 
-                  <Text fontSize="$6" fontWeight="bold">
-                    {record.isMoldy ? '⚠️ 檢測到發霉' : '✓ 未檢測到發霉'}
-                  </Text>
-                </XStack>
-
-                <Text mt="$2" color="$gray10">
-                  檢測時間：{formatFullDate(record.timestamp)}
-                </Text>
-              </YStack>
-
-              {/* 收藏＆刪除 */}
-              <XStack mt="$4" gap="$2">
-                <Button
-                  f={1}
-                  bg={isFavorite ? '$red4' : '$gray4'}
-                  icon={<Heart fill={isFavorite ? 'red' : 'transparent'} />}
-                  onPress={onToggleFavorite}
-                >
-                  {isFavorite ? '取消收藏' : '加入收藏'}
-                </Button>
-
-                <Button
-                  f={1}
-                  bg="$red4"
-                  icon={<Trash2 color="$red10" />}
-                  onPress={onDelete}
-                >
-                  刪除
-                </Button>
-              </XStack>
-            </>
-          )}
+            {/* 刪除按鈕 */}
+            <Button
+              flex={1}
+              size="$4"
+              backgroundColor="$red4"
+              icon={<Trash2 size={20} color="$red10" />}
+              onPress={onDelete}
+              pressStyle={{
+                backgroundColor: '$red5',
+                scale: 0.98,
+              }}
+            >
+              <Text fontSize="$4" fontWeight="600" color="$red11">
+                刪除
+              </Text>
+            </Button>
+          </XStack>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>
   );
+});
+
+const styles = StyleSheet.create({
+  image: {
+    width: '100%',
+    height: 240,
+  },
 });

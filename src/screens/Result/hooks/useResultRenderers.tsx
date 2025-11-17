@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
-import { YStack, Text, Button } from 'tamagui';
-import { YCM_COLORS } from '@styles/imgs/themes';
-import ResultItem from '../components/ResultItem';
-import ProductCard from '../components/ProductCard';
+// src/screens/Result/hooks/useResultRenderers.tsx
+import React, { useMemo } from 'react';
+import { YStack, Text, Button, View, Image } from 'tamagui';
+import { getConfidenceLevel } from '@utils/getConfidenceLevel';
 import { WooProduct } from '@typedef/productAPI';
+import ConfidenceResultCard from '@components/ConfidenceResultCard';
+import { StyleSheet } from 'react-native';
+import { YCM_COLORS } from '@styles/imgs/themes';
 
 interface UseResultRenderersProps {
   imageUri: string;
@@ -14,7 +16,6 @@ interface UseResultRenderersProps {
   hasMoreData: boolean;
   nextPage: number;
   getProducts: (page: number) => void;
-  onSelect: (p: WooProduct) => void;
 }
 
 export const useResultRenderers = ({
@@ -26,14 +27,34 @@ export const useResultRenderers = ({
   hasMoreData,
   nextPage,
   getProducts,
-  onSelect,
 }: UseResultRenderersProps) => {
-  const renderProductItem = useCallback(
-    ({ item }: { item: WooProduct }) => (
-      <ProductCard item={item} onPress={() => onSelect(item)} />
-    ),
-    [onSelect],
-  );
+  const ui = getConfidenceLevel(confidence, isMoldy);
+
+  const renderHeader = useMemo(() => {
+    return (
+      <View>
+        <Image source={{ uri: imageUri }} style={styles.image} />
+
+        <ConfidenceResultCard
+          ui={ui}
+          confidence={confidence}
+          showProgressBar
+          showSuggestion
+        />
+        {/* 推薦商品標題 */}
+        {products.length > 0 && (
+          <YStack gap="$2" marginTop="$5" marginBottom="$3">
+            <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
+              🛡️ 除霉商品推薦
+            </Text>
+            <Text fontSize="$3" color="$gray10">
+              精選 {products.length} 件優質商品
+            </Text>
+          </YStack>
+        )}
+      </View>
+    );
+  }, [imageUri, ui, confidence, products.length]);
 
   const renderFooter = useMemo(() => {
     if (loading && products.length > 0) {
@@ -76,31 +97,6 @@ export const useResultRenderers = ({
     return null;
   }, [loading, hasMoreData, nextPage, products.length, getProducts]);
 
-  const renderHeader = useMemo(() => {
-    return (
-      <>
-        <ResultItem
-          imageUri={imageUri}
-          isMoldy={isMoldy}
-          loading={loading}
-          totalNum={products.length}
-          confidence={confidence}
-        />
-
-        {isMoldy && products.length > 0 && (
-          <YStack gap="$2" marginTop="$4" marginBottom="$3">
-            <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
-              💡 推薦商品
-            </Text>
-            <Text fontSize="$3" color="$gray10">
-              精選 {products.length} 件除霉防霉用品
-            </Text>
-          </YStack>
-        )}
-      </>
-    );
-  }, [imageUri, isMoldy, loading, products.length, confidence]);
-
   const renderEmpty = useMemo(() => {
     if (loading) {
       return (
@@ -126,9 +122,17 @@ export const useResultRenderers = ({
   }, [loading]);
 
   return {
-    renderProductItem,
     renderHeader,
     renderFooter,
     renderEmpty,
   };
 };
+
+const styles = StyleSheet.create({
+  image: {
+    width: '100%',
+    height: 260,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+});

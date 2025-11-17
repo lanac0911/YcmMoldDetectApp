@@ -11,6 +11,7 @@ import { YCM_COLORS } from '@styles/imgs/themes';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
 import { DetectionResult } from '@typedef/detection';
+import { analyzeImageMold } from '@utils/detectMold';
 
 interface PreviewSelectImgProps {
   selectedImage: string | null;
@@ -65,7 +66,6 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
     }
   };
 
-  // Mock / TODO：call api 分析
   const handleAnalyze = async () => {
     if (!selectedImage) {
       Alert.alert('請選擇圖片', '請先拍照或從相簿選擇圖片');
@@ -74,14 +74,20 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
 
     setIsLoading(true);
 
-    // TODO: 替換成真正的 OpenAI API 呼叫
-    const payload: DetectionResult = {
-      imageUri: selectedImage,
-      isMoldy: true, // ← 之後改 openai 回傳
-      confidence: 0.87,
-    };
+    try {
+      const result = await analyzeImageMold(selectedImage);
 
-    navigation.navigate('Result', payload); // ⭐型別正確
+      navigation.navigate('Result', {
+        imageUri: selectedImage,
+        isMoldy: result.isMoldy,
+        confidence: result.confidence,
+        explanation: result.explanation,
+      });
+    } catch (err) {
+      Alert.alert('偵測錯誤', 'AI 辨識過程發生問題，請重試');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -146,18 +152,20 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
             </Button>
           </>
         ) : (
-          <Button
-            size="$6"
-            backgroundColor={YCM_COLORS.primary}
-            pressStyle={{ backgroundColor: YCM_COLORS.dark, scale: 0.98 }}
-            icon={<CameraIcon size={24} color="white" />}
-            onPress={handleAnalyze}
-            disabled={loading}
-          >
-            <Text color="white" fontSize="$6" fontWeight="700">
-              {loading ? '處理中...' : '開始分析'}
-            </Text>
-          </Button>
+          <>
+            <Button
+              size="$6"
+              backgroundColor={YCM_COLORS.primary}
+              pressStyle={{ backgroundColor: YCM_COLORS.dark, scale: 0.98 }}
+              icon={<CameraIcon size={24} color="white" />}
+              onPress={handleAnalyze}
+              disabled={loading}
+            >
+              <Text color="white" fontSize="$6" fontWeight="700">
+                {loading ? '處理中...' : '開始分析'}
+              </Text>
+            </Button>
+          </>
         )}
       </YStack>
     </YStack>

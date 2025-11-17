@@ -1,6 +1,7 @@
+// src/screens/Result/ResultScreen.tsx
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet } from 'react-native';
-import { XStack, YStack, Text, View, Button } from 'tamagui';
+import { FlatList, Pressable, StyleSheet, Image } from 'react-native';
+import { XStack, Text, View } from 'tamagui';
 import { ArrowLeft, Heart } from '@tamagui/lucide-icons';
 import {
   RouteProp,
@@ -14,12 +15,12 @@ import { useWooProductsStore } from '@store/wooProductsStore';
 import { useCartStore } from '@store/cartStore';
 import { useDetectionHistory } from '@store/detectionHistoryStore';
 import SafeArea from '@components/SafeArea';
-import { YCM_COLORS } from '@styles/imgs/themes';
-import { useResultRenderers } from './hooks/useResultRenderers';
-import CheckoutButton from './components/CheckoutButton';
-import { WooProduct } from '@typedef/productAPI';
-import ProductDetailDialog from './components/ProductDetailDialog';
 import ProductCard from './components/ProductCard';
+import ProductDetailDialog from './components/ProductDetailDialog';
+import CheckoutButton from './components/CheckoutButton';
+import { useResultRenderers } from './hooks/useResultRenderers';
+import { YCM_COLORS } from '@styles/imgs/themes';
+import { WooProduct } from '@typedef/productAPI';
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, 'Result'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -58,25 +59,10 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     }, [clearCart]),
   );
 
-  // render func
-  const { renderProductItem, renderHeader, renderFooter, renderEmpty } =
-    useResultRenderers({
-      imageUri,
-      isMoldy,
-      confidence,
-      loading,
-      products,
-      hasMoreData,
-      nextPage,
-      getProducts,
-    });
-
-  // 加入 recordId
   const [currentRecordId, setCurrentRecordId] = useState<string | null>(
     recordId ?? null,
   );
 
-  const onSelect = (p: WooProduct) => setSelectedProduct(p);
   // 新增一筆紀錄
   useEffect(() => {
     refreshProducts();
@@ -87,40 +73,41 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     } else {
       setCurrentRecordId(recordId);
     }
-  }, [recordId, imageUri, isMoldy, confidence, addRecord, refreshProducts]);
+  }, [imageUri, isMoldy, confidence, recordId, refreshProducts, addRecord]);
 
   const currentRecord = useMemo(() => {
     return records.find(r => r.id === currentRecordId) ?? null;
-  }, [currentRecordId, records]);
+  }, [records, currentRecordId]);
 
   const isFavorite = currentRecord?.isFavorite ?? false;
+
+  const handleToggleFavorite = () => {
+    if (!currentRecordId) return;
+    toggleFavorite(currentRecordId);
+  };
 
   // 返回
   const handleGoBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
-
-  // 收藏
-  const handleToggleFavorite = useCallback(() => {
-    if (!currentRecordId) return;
-    toggleFavorite(currentRecordId);
-  }, [currentRecordId, toggleFavorite]);
-
-  const handleOnReachEnd = () => {
-    if (!loading && hasMoreData) {
-      getProducts(nextPage);
-    }
+  const handleCheckout = () => {
+    navigation.navigate('Home', { openCart: true });
   };
 
-  // 結帳：回 Home＆打開購物車
-  const handleCheckout = useCallback(() => {
-    // 導航到 Home，並傳遞參數告訴要打開購物車
-    navigation.navigate('Home', { openCart: true });
-  }, [navigation]);
+  const { renderHeader, renderFooter, renderEmpty } = useResultRenderers({
+    imageUri,
+    isMoldy,
+    confidence,
+    loading,
+    products,
+    hasMoreData,
+    nextPage,
+    getProducts,
+  });
 
   return (
     <SafeArea>
-      <View flex={1} backgroundColor="$background">
+      <View flex={1}>
         {/* Header Bar */}
         <XStack
           backgroundColor="white"
@@ -163,7 +150,6 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
                 size={22}
                 color={isFavorite ? '#EF4444' : '#374151'}
                 fill={isFavorite ? '#EF4444' : 'transparent'}
-                strokeWidth={2}
               />
             </View>
           </Pressable>
@@ -175,14 +161,13 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
           contentContainerStyle={styles.contentContainer}
           ListHeaderComponent={renderHeader}
           data={products}
-          renderItem={({ item }: { item: WooProduct }) => (
-            <ProductCard item={item} onPress={() => onSelect(item)} />
+          renderItem={({ item }) => (
+            <ProductCard item={item} onPress={() => setSelectedProduct(item)} />
           )}
           keyExtractor={item => item.id.toString()}
           ListFooterComponent={renderFooter}
           ListEmptyComponent={renderEmpty}
-          showsVerticalScrollIndicator={false}
-          onEndReached={handleOnReachEnd}
+          onEndReached={() => !loading && hasMoreData && getProducts(nextPage)}
           onEndReachedThreshold={0.3}
         />
 
@@ -205,8 +190,6 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
   );
 };
 
-export default ResultScreen;
-
 const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 20,
@@ -214,3 +197,5 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 });
+
+export default ResultScreen;
