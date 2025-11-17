@@ -83,6 +83,12 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     toggleFavorite(currentRecordId);
   }, [currentRecordId, isFavorite, toggleFavorite]);
 
+  const handleOnReachEnd = () => {
+    if (!loading && hasMoreData) {
+      getProducts(nextPage);
+    }
+  };
+
   return (
     <SafeArea>
       <View flex={1} backgroundColor="$background">
@@ -145,6 +151,8 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
           ListFooterComponent={renderFooter}
           ListEmptyComponent={renderEmpty}
           showsVerticalScrollIndicator={false}
+          onEndReached={handleOnReachEnd}
+          onEndReachedThreshold={0.3}
         />
       </View>
     </SafeArea>
