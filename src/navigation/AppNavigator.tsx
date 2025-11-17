@@ -14,6 +14,7 @@ export type RootStackParamList = {
     imageUri: string;
     isMoldy?: boolean;
     confidence?: number;
+    recordId?: string;
   };
   Cart: undefined;
 };
