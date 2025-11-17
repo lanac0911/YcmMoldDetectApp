@@ -1,13 +1,13 @@
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Alert } from 'react-native';
 import { XStack, Text, View } from 'tamagui';
-import { ArrowLeft, Heart } from '@tamagui/lucide-icons';
+import { ArrowLeft, Heart, ShoppingCart } from '@tamagui/lucide-icons';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { RootStackParamList } from '@navigation/AppNavigator';
 import { useWooProductsStore } from '@store/wooProductsStore';
-import { useCart } from '@utils/useCart';
+import { useCartStore } from '@store/cartStore';
 import { useDetectionHistory } from '@store/detectionHistoryStore';
 import SafeArea from '@components/SafeArea';
 import { YCM_COLORS } from '@styles/imgs/themes';
@@ -30,7 +30,9 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     hasMoreData,
   } = useWooProductsStore();
 
-  const { addToCart, cartItems } = useCart();
+  // 購物車 store
+  const { getTotalItems, clearCart } = useCartStore();
+  const totalItems = getTotalItems();
 
   // 歷史紀錄
   const { records, addRecord, toggleFavorite } = useDetectionHistory();
@@ -46,7 +48,6 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
       hasMoreData,
       nextPage,
       getProducts,
-      addToCart,
     });
 
   // 加入 recordId
@@ -54,8 +55,10 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     recordId ?? null,
   );
 
-  // 新增一筆紀錄
+  // 清空購物車
   useEffect(() => {
+    clearCart();
+
     refreshProducts();
 
     if (!recordId) {
@@ -64,7 +67,15 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     } else {
       setCurrentRecordId(recordId);
     }
-  }, [recordId, imageUri, isMoldy, confidence, addRecord]);
+  }, [
+    recordId,
+    imageUri,
+    isMoldy,
+    confidence,
+    addRecord,
+    refreshProducts,
+    clearCart,
+  ]);
 
   const currentRecord = useMemo(() => {
     return records.find(r => r.id === currentRecordId) ?? null;
@@ -81,7 +92,7 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
   const handleToggleFavorite = useCallback(() => {
     if (!currentRecordId) return;
     toggleFavorite(currentRecordId);
-  }, [currentRecordId, isFavorite, toggleFavorite]);
+  }, [currentRecordId, toggleFavorite]);
 
   const handleOnReachEnd = () => {
     if (!loading && hasMoreData) {
