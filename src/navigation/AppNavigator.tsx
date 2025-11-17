@@ -7,8 +7,7 @@ import Cart from '@screens/Cart';
 import Home from '@screens/Home';
 
 export type RootStackParamList = {
-  Welcome: undefined;
-  Home: undefined;
+  Home: { openCart?: boolean } | undefined;
   Camera: undefined;
   Result: {
     imageUri: string;

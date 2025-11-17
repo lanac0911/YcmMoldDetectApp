@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '@navigation/AppNavigator';
 import { useCameraDevice } from 'react-native-vision-camera';
-import PreviewSelectImg from './PreviewSelectImg';
-import CameraArea from './CameraArea';
 import { YStack } from 'tamagui';
+import { useFocusEffect } from '@react-navigation/native';
+import CameraArea from './CameraArea';
+import PreviewSelectImg from './PreviewSelectImg';
 
-type DetectionTabProps = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
-};
+interface DetectionTabProps {
+  navigation: any;
+}
 
 export default function DetectionTab({ navigation }: DetectionTabProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -20,7 +19,17 @@ export default function DetectionTab({ navigation }: DetectionTabProps) {
 
   const device = useCameraDevice(cameraPosition);
 
-  // 相機拍照區域 - 直接返回全屏相機
+  // 清除圖片狀態
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('🔄 DetectionTab focused - clearing image state');
+      setSelectedImage(null);
+      setIsLoading(false);
+      setShowCamera(false);
+    }, []),
+  );
+
+  // 相機拍照區域
   if (showCamera && device) {
     return (
       <CameraArea

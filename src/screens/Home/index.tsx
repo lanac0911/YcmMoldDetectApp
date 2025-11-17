@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
-import { StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+// src/screens/Home/Home.tsx
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
 import { YStack, View, Text, XStack } from 'tamagui';
-import { ShoppingCart, Camera, History } from '@tamagui/lucide-icons';
+import { Camera, History, ShoppingCart } from '@tamagui/lucide-icons';
 import SafeArea from '@components/SafeArea';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import DetectionTab from './tabs/Camera/DetectionTab';
 import HistoryTab from './tabs/History/HistoryTab';
+import { useCartStore } from '@store/cartStore';
+import CartModal from './components/CartModal';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-export default function Home({ navigation }: Props) {
+export default function Home({ navigation, route }: Props) {
   const [currentTab, setCurrentTab] = useState<'detection' | 'history'>(
     'detection',
   );
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // 購物車數量
+  const { getTotalItems } = useCartStore();
+  const totalItems = getTotalItems();
+
+  // 監聽：是否打開購物車
+  useEffect(() => {
+    if (route.params?.openCart) {
+      setIsCartOpen(true);
+      navigation.setParams({ openCart: undefined });
+    }
+  }, [route.params?.openCart, navigation]);
 
   return (
     <SafeArea>
@@ -129,10 +145,10 @@ export default function Home({ navigation }: Props) {
           )}
         </YStack>
 
-        {/* 購物車 FAB - 加強陰影與動畫 */}
+        {/* 購物車 FAB */}
         <Pressable
           style={styles.floatButton}
-          onPress={() => navigation.navigate('Cart')}
+          onPress={() => setIsCartOpen(true)}
         >
           <View
             width={64}
@@ -147,26 +163,32 @@ export default function Home({ navigation }: Props) {
             shadowRadius={12}
           >
             <ShoppingCart size={30} color="white" strokeWidth={2.5} />
-            {/* 購物車數量徽章 (可選) */}
-            <View
-              position="absolute"
-              top={-2}
-              right={-2}
-              width={22}
-              height={22}
-              borderRadius={11}
-              backgroundColor="$red10"
-              justifyContent="center"
-              alignItems="center"
-              borderWidth={2}
-              borderColor="white"
-            >
-              <Text fontSize={10} fontWeight="700" color="white">
-                3
-              </Text>
-            </View>
+            {/* 購物車數量徽章 */}
+            {totalItems > 0 && (
+              <View
+                position="absolute"
+                top={-2}
+                right={-2}
+                minWidth={22}
+                height={22}
+                paddingHorizontal="$1.5"
+                borderRadius={11}
+                backgroundColor="$red10"
+                justifyContent="center"
+                alignItems="center"
+                borderWidth={2}
+                borderColor="white"
+              >
+                <Text fontSize={11} fontWeight="700" color="white">
+                  {totalItems > 99 ? '99+' : totalItems}
+                </Text>
+              </View>
+            )}
           </View>
         </Pressable>
+
+        {/* 購物車 Modal */}
+        <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       </YStack>
     </SafeArea>
   );

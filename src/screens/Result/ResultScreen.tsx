@@ -1,8 +1,12 @@
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Alert } from 'react-native';
-import { XStack, Text, View } from 'tamagui';
+import { FlatList, Pressable, StyleSheet } from 'react-native';
+import { XStack, YStack, Text, View, Button } from 'tamagui';
 import { ArrowLeft, Heart, ShoppingCart } from '@tamagui/lucide-icons';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import {
+  RouteProp,
+  useNavigation,
+  useFocusEffect,
+} from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { RootStackParamList } from '@navigation/AppNavigator';
@@ -30,12 +34,21 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     hasMoreData,
   } = useWooProductsStore();
 
-  // 購物車 store
-  const { getTotalItems, clearCart } = useCartStore();
+  // 購物車
+  const { getTotalItems, getTotalPrice, clearCart } = useCartStore();
   const totalItems = getTotalItems();
+  const totalPrice = getTotalPrice();
 
   // 歷史紀錄
   const { records, addRecord, toggleFavorite } = useDetectionHistory();
+
+  // 每次進入頁面時清空購物車
+  useFocusEffect(
+    useCallback(() => {
+      console.log('🧹 Clearing cart on Result page');
+      clearCart();
+    }, [clearCart]),
+  );
 
   // render func
   const { renderProductItem, renderHeader, renderFooter, renderEmpty } =
@@ -55,10 +68,8 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     recordId ?? null,
   );
 
-  // 清空購物車
+  // 新增一筆紀錄
   useEffect(() => {
-    clearCart();
-
     refreshProducts();
 
     if (!recordId) {
@@ -67,15 +78,7 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     } else {
       setCurrentRecordId(recordId);
     }
-  }, [
-    recordId,
-    imageUri,
-    isMoldy,
-    confidence,
-    addRecord,
-    refreshProducts,
-    clearCart,
-  ]);
+  }, [recordId, imageUri, isMoldy, confidence, addRecord, refreshProducts]);
 
   const currentRecord = useMemo(() => {
     return records.find(r => r.id === currentRecordId) ?? null;
@@ -99,6 +102,12 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
       getProducts(nextPage);
     }
   };
+
+  // 結帳：回 Home＆打開購物車
+  const handleCheckout = useCallback(() => {
+    // 導航到 Home，並傳遞參數告訴要打開購物車
+    navigation.navigate('Home', { openCart: true });
+  }, [navigation]);
 
   return (
     <SafeArea>
@@ -165,6 +174,63 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
           onEndReached={handleOnReachEnd}
           onEndReachedThreshold={0.3}
         />
+
+        {/* 結帳按鈕 (fix) */}
+        {totalItems > 0 && (
+          <YStack
+            backgroundColor="white"
+            paddingHorizontal="$4"
+            paddingVertical="$3"
+            borderTopWidth={1}
+            borderTopColor="$gray4"
+            shadowColor="#000"
+            shadowOffset={{ width: 0, height: -2 }}
+            shadowOpacity={0.1}
+            shadowRadius={8}
+            elevation={5}
+          >
+            <XStack
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="$2"
+            >
+              <YStack>
+                <Text fontSize="$2" color="$gray10">
+                  已選 {totalItems} 件商品
+                </Text>
+                <XStack alignItems="baseline" gap="$1" marginTop="$1">
+                  <Text fontSize="$2" color="$gray9">
+                    合計
+                  </Text>
+                  <Text
+                    fontSize="$8"
+                    fontWeight="800"
+                    color={YCM_COLORS.primary}
+                  >
+                    ${totalPrice.toFixed(0)}
+                  </Text>
+                </XStack>
+              </YStack>
+
+              <Button
+                size="$5"
+                backgroundColor={YCM_COLORS.primary}
+                paddingHorizontal="$6"
+                borderRadius={12}
+                pressStyle={{
+                  backgroundColor: YCM_COLORS.dark,
+                  scale: 0.98,
+                }}
+                onPress={handleCheckout}
+                icon={<ShoppingCart size={20} color="white" />}
+              >
+                <Text color="white" fontSize="$5" fontWeight="700">
+                  結帳
+                </Text>
+              </Button>
+            </XStack>
+          </YStack>
+        )}
       </View>
     </SafeArea>
   );
@@ -176,6 +242,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 20,
     paddingTop: 16,
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
 });
