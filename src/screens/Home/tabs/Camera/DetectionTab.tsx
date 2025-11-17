@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
 import { useCameraDevice } from 'react-native-vision-camera';
 import PreviewSelectImg from './PreviewSelectImg';
 import CameraArea from './CameraArea';
 import { YStack } from 'tamagui';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
-export default function DetectionTab({ navigation }: Props) {
+type DetectionTabProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
+};
+
+export default function DetectionTab({ navigation }: DetectionTabProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);

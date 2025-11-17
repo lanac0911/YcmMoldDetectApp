@@ -5,9 +5,9 @@ import { RootStackParamList } from '@navigation/AppNavigator';
 import { YStack, View, Text, XStack } from 'tamagui';
 import { ShoppingCart, Camera, History } from '@tamagui/lucide-icons';
 import SafeArea from '@components/SafeArea';
-import DetectionTab from './tabs/Camera/DetectionTab';
-import HistoryTab from './tabs/HistoryTab';
 import { YCM_COLORS } from '@styles/imgs/themes';
+import DetectionTab from './tabs/Camera/DetectionTab';
+import HistoryTab from './tabs/History/HistoryTab';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 

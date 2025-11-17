@@ -78,6 +78,8 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
       isMoldy: true, // TODO
       confidence: 0.87, // TODO
     });
+
+    setIsLoading(false);
   };
 
   return (
