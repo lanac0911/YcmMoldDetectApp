@@ -5,16 +5,13 @@ import Welcome from '@screens/Welcome';
 import Result from '@screens/Result/ResultScreen';
 import Cart from '@screens/Cart';
 import Home from '@screens/Home';
+import { DetectionResult } from '@typedef/detection';
 
 export type RootStackParamList = {
+  Welcome: undefined;
   Home: { openCart?: boolean } | undefined;
   Camera: undefined;
-  Result: {
-    imageUri: string;
-    isMoldy?: boolean;
-    confidence?: number;
-    recordId?: string;
-  };
+  Result: DetectionResult;
   Cart: undefined;
 };
 

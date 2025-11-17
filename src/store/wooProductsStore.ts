@@ -82,9 +82,6 @@ export const useWooProductsStore = create<WooProductsState>((set, get) => ({
     await handleApiRequest({
       asyncRequest,
       successCallback,
-      errorCallback: e => {
-        console.log('e', JSON.stringify(e));
-      },
       finalCallback: () => set({ loading: false }),
     });
   },

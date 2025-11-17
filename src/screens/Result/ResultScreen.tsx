@@ -54,7 +54,6 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
   // 每次進入頁面時清空購物車
   useFocusEffect(
     useCallback(() => {
-      console.log('🧹 Clearing cart on Result page');
       clearCart();
     }, [clearCart]),
   );

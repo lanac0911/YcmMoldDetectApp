@@ -178,7 +178,6 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
                 size="$5"
                 backgroundColor={YCM_COLORS.primary}
                 onPress={() => {
-                  console.log('🛒 Checkout:', items);
                   onClose();
                 }}
               >

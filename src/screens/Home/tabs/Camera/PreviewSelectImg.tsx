@@ -10,6 +10,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
+import { DetectionResult } from '@typedef/detection';
 
 interface PreviewSelectImgProps {
   selectedImage: string | null;
@@ -65,7 +66,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
   };
 
   // Mock / TODO：call api 分析
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!selectedImage) {
       Alert.alert('請選擇圖片', '請先拍照或從相簿選擇圖片');
       return;
@@ -73,13 +74,14 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
 
     setIsLoading(true);
 
-    navigation.navigate('Result', {
+    // TODO: 替換成真正的 OpenAI API 呼叫
+    const payload: DetectionResult = {
       imageUri: selectedImage,
-      isMoldy: true, // TODO
-      confidence: 0.87, // TODO
-    });
+      isMoldy: true, // ← 之後改 openai 回傳
+      confidence: 0.87,
+    };
 
-    setIsLoading(false);
+    navigation.navigate('Result', payload); // ⭐型別正確
   };
 
   return (

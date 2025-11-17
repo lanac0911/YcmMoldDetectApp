@@ -22,7 +22,6 @@ export default function DetectionTab({ navigation }: DetectionTabProps) {
   // 清除圖片狀態
   useFocusEffect(
     React.useCallback(() => {
-      console.log('🔄 DetectionTab focused - clearing image state');
       setSelectedImage(null);
       setIsLoading(false);
       setShowCamera(false);
