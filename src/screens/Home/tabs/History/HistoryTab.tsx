@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Alert, FlatList } from 'react-native';
-import { YStack, Text } from 'tamagui';
+import { YStack } from 'tamagui';
 
 import {
   useDetectionHistory,
@@ -23,13 +23,35 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   const { records, toggleFavorite, removeRecord } = useDetectionHistory();
 
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
+  // 分頁參數
+  const pageSize = 5;
+  const [page, setPage] = useState(1);
+
+  // Dialog 管理
   const [selectedRecord, setSelectedRecord] = useState<DetectionRecord | null>(
     null,
   );
 
-  const displayRecords = showFavoritesOnly
-    ? records.filter(r => r.isFavorite)
-    : records;
+  // 篩選（全部/收藏）
+  const filteredRecords = useMemo(() => {
+    return showFavoritesOnly ? records.filter(r => r.isFavorite) : records;
+  }, [records, showFavoritesOnly]);
+
+  // 切分頁
+  const paginatedRecords = useMemo(() => {
+    return filteredRecords.slice(0, page * pageSize);
+  }, [filteredRecords, page]);
+
+  // 是否有下一頁
+  const hasMore = paginatedRecords.length < filteredRecords.length;
+
+  // 滑到底 → 加載下一頁
+  const loadMore = () => {
+    if (hasMore) {
+      setPage(prev => prev + 1);
+    }
+  };
 
   const handleRecordPress = (record: DetectionRecord) => {
     setSelectedRecord(record);
@@ -50,6 +72,12 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
         onPress: () => {
           removeRecord(selectedRecord.id);
           setSelectedRecord(null);
+
+          // 刪除後重新調整頁數
+          setPage(prev => {
+            const maxPage = Math.ceil((filteredRecords.length - 1) / pageSize);
+            return Math.max(1, Math.min(prev, maxPage));
+          });
         },
       },
     ]);
@@ -59,20 +87,23 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
     ? records.find(r => r.id === selectedRecord.id)
     : null;
 
-  // 沒有任何紀錄
+  // 沒有任何紀錄（全部模式）
   if (!showFavoritesOnly && records.length === 0) {
     return <HistoryEmpty />;
   }
 
-  // 「收藏頁」沒有紀錄
-  if (showFavoritesOnly && displayRecords.length === 0) {
+  // 收藏頁沒有紀錄
+  if (showFavoritesOnly && filteredRecords.length === 0) {
     return (
       <YStack flex={1} backgroundColor="$background">
         <FilterButtons
           showFavoritesOnly={showFavoritesOnly}
           total={records.length}
           favCount={records.filter(r => r.isFavorite).length}
-          onToggle={setShowFavoritesOnly}
+          onToggle={flag => {
+            setShowFavoritesOnly(flag);
+            setPage(1);
+          }}
         />
         <HistoryEmpty isFavorite />
       </YStack>
@@ -82,16 +113,19 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   return (
     <>
       <YStack flex={1} backgroundColor="$background" px="$4">
-        {/* 篩選按鈕 */}
+        {/* 篩選 */}
         <FilterButtons
           showFavoritesOnly={showFavoritesOnly}
           total={records.length}
           favCount={records.filter(r => r.isFavorite).length}
-          onToggle={setShowFavoritesOnly}
+          onToggle={flag => {
+            setShowFavoritesOnly(flag);
+            setPage(1);
+          }}
         />
 
         <FlatList
-          data={displayRecords}
+          data={paginatedRecords}
           keyExtractor={item => item.id}
           contentContainerStyle={{ paddingBottom: 40 }}
           renderItem={({ item }) => (
@@ -102,6 +136,8 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
               onToggleFavorite={() => toggleFavorite(item.id)}
             />
           )}
+          onEndReachedThreshold={0.2}
+          onEndReached={loadMore}
         />
       </YStack>
 
