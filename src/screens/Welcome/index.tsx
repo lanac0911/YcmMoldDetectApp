@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { YStack, Text, Button, Circle } from 'tamagui';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -14,6 +14,12 @@ type WelcomeScreenProps = {
 };
 
 export default function Welcome({ navigation }: WelcomeScreenProps) {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 2000);
+  }, []);
+
   return (
     <LinearGradient
       colors={['#FFFFFF', '#F0F8F0', '#E8F5E8']}
@@ -58,24 +64,6 @@ export default function Welcome({ navigation }: WelcomeScreenProps) {
               </Text>
             </YStack>
           </YStack>
-
-          {/* 按鈕區 */}
-          <Button
-            size="$6"
-            backgroundColor={YCM_COLORS.primary}
-            color="white"
-            fontSize="$6"
-            fontWeight="700"
-            borderRadius="$6"
-            pressStyle={{
-              backgroundColor: YCM_COLORS.dark,
-              scale: 0.98,
-            }}
-            onPress={() => navigation.navigate('Camera')}
-            icon={<CameraIcon size={24} color="white" />}
-          >
-            開始檢測
-          </Button>
 
           <Text
             fontSize="$2"

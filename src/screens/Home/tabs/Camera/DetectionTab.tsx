@@ -4,13 +4,10 @@ import { RootStackParamList } from '@navigation/AppNavigator';
 import { useCameraDevice } from 'react-native-vision-camera';
 import PreviewSelectImg from './PreviewSelectImg';
 import CameraArea from './CameraArea';
-import { Pressable, StyleSheet } from 'react-native';
-import { View } from 'tamagui';
-import { ShoppingCart } from '@tamagui/lucide-icons';
+import { YStack } from 'tamagui';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Camera'>;
-
-export default function CameraScreen({ navigation }: Props) {
+type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+export default function DetectionTab({ navigation }: Props) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
@@ -20,7 +17,7 @@ export default function CameraScreen({ navigation }: Props) {
 
   const device = useCameraDevice(cameraPosition);
 
-  // 相機拍照區域
+  // 相機拍照區域 - 直接返回全屏相機
   if (showCamera && device) {
     return (
       <CameraArea
@@ -31,9 +28,10 @@ export default function CameraScreen({ navigation }: Props) {
       />
     );
   }
+
   // 預覽or選擇區域
   return (
-    <>
+    <YStack flex={1}>
       <PreviewSelectImg
         selectedImage={selectedImage}
         setSelectedImage={setSelectedImage}
@@ -42,34 +40,6 @@ export default function CameraScreen({ navigation }: Props) {
         setIsLoading={setIsLoading}
         navigation={navigation}
       />
-      {/* 購物車 Fab Button */}
-      <Pressable
-        style={styles.floatButton}
-        onPress={() => navigation.navigate('Cart')}
-      >
-        <View
-          width={60}
-          height={60}
-          borderRadius={30}
-          backgroundColor="$green10"
-          justifyContent="center"
-          alignItems="center"
-          shadowColor="$shadowColor"
-          shadowOffset={{ width: 0, height: 4 }}
-          shadowOpacity={0.3}
-          shadowRadius={8}
-        >
-          <ShoppingCart size={28} color="white" />
-        </View>
-      </Pressable>
-    </>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  floatButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
-  },
-});
