@@ -1,20 +1,20 @@
-// src/screens/Result/hooks/useResultRenderers.tsx
 import React, { useCallback, useMemo } from 'react';
 import { YStack, Text, Button } from 'tamagui';
-import { Product } from '@typedef/product';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import ResultItem from '../components/ResultItem';
 import ProductCard from '../components/ProductCard';
+import { WooProduct } from '@typedef/productAPI';
 
 interface UseResultRenderersProps {
   imageUri: string;
   isMoldy: boolean;
   confidence: number;
   loading: boolean;
-  products: Product[];
+  products: WooProduct[];
   hasMoreData: boolean;
   nextPage: number;
   getProducts: (page: number) => void;
+  onSelect: (p: WooProduct) => void;
 }
 
 export const useResultRenderers = ({
@@ -26,10 +26,14 @@ export const useResultRenderers = ({
   hasMoreData,
   nextPage,
   getProducts,
+  onSelect,
 }: UseResultRenderersProps) => {
-  const renderProductItem = useCallback(({ item }: { item: Product }) => {
-    return <ProductCard item={item} />;
-  }, []);
+  const renderProductItem = useCallback(
+    ({ item }: { item: WooProduct }) => (
+      <ProductCard item={item} onPress={() => onSelect(item)} />
+    ),
+    [onSelect],
+  );
 
   const renderFooter = useMemo(() => {
     if (loading && products.length > 0) {

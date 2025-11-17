@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, StyleSheet } from 'react-native';
 import { XStack, YStack, Text, View, Button } from 'tamagui';
-import { ArrowLeft, Heart, ShoppingCart } from '@tamagui/lucide-icons';
+import { ArrowLeft, Heart } from '@tamagui/lucide-icons';
 import {
   RouteProp,
   useNavigation,
@@ -16,6 +16,10 @@ import { useDetectionHistory } from '@store/detectionHistoryStore';
 import SafeArea from '@components/SafeArea';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import { useResultRenderers } from './hooks/useResultRenderers';
+import CheckoutButton from './components/CheckoutButton';
+import { WooProduct } from '@typedef/productAPI';
+import ProductDetailDialog from './components/ProductDetailDialog';
+import ProductCard from './components/ProductCard';
 
 type ResultScreenRouteProp = RouteProp<RootStackParamList, 'Result'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -23,6 +27,11 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
   const { imageUri, isMoldy, confidence, recordId } = route.params;
   const navigation = useNavigation<NavigationProp>();
+
+  // 選的商品資料
+  const [selectedProduct, setSelectedProduct] = useState<WooProduct | null>(
+    null,
+  );
 
   // 商品資料
   const {
@@ -68,6 +77,7 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     recordId ?? null,
   );
 
+  const onSelect = (p: WooProduct) => setSelectedProduct(p);
   // 新增一筆紀錄
   useEffect(() => {
     refreshProducts();
@@ -166,7 +176,9 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
           contentContainerStyle={styles.contentContainer}
           ListHeaderComponent={renderHeader}
           data={products}
-          renderItem={renderProductItem}
+          renderItem={({ item }: { item: WooProduct }) => (
+            <ProductCard item={item} onPress={() => onSelect(item)} />
+          )}
           keyExtractor={item => item.id.toString()}
           ListFooterComponent={renderFooter}
           ListEmptyComponent={renderEmpty}
@@ -175,61 +187,19 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
           onEndReachedThreshold={0.3}
         />
 
+        {/* 詳細資訊 Dialog */}
+        <ProductDetailDialog
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+
         {/* 結帳按鈕 (fix) */}
         {totalItems > 0 && (
-          <YStack
-            backgroundColor="white"
-            paddingHorizontal="$4"
-            paddingVertical="$3"
-            borderTopWidth={1}
-            borderTopColor="$gray4"
-            shadowColor="#000"
-            shadowOffset={{ width: 0, height: -2 }}
-            shadowOpacity={0.1}
-            shadowRadius={8}
-            elevation={5}
-          >
-            <XStack
-              justifyContent="space-between"
-              alignItems="center"
-              marginBottom="$2"
-            >
-              <YStack>
-                <Text fontSize="$2" color="$gray10">
-                  已選 {totalItems} 件商品
-                </Text>
-                <XStack alignItems="baseline" gap="$1" marginTop="$1">
-                  <Text fontSize="$2" color="$gray9">
-                    合計
-                  </Text>
-                  <Text
-                    fontSize="$8"
-                    fontWeight="800"
-                    color={YCM_COLORS.primary}
-                  >
-                    ${totalPrice.toFixed(0)}
-                  </Text>
-                </XStack>
-              </YStack>
-
-              <Button
-                size="$5"
-                backgroundColor={YCM_COLORS.primary}
-                paddingHorizontal="$6"
-                borderRadius={12}
-                pressStyle={{
-                  backgroundColor: YCM_COLORS.dark,
-                  scale: 0.98,
-                }}
-                onPress={handleCheckout}
-                icon={<ShoppingCart size={20} color="white" />}
-              >
-                <Text color="white" fontSize="$5" fontWeight="700">
-                  結帳
-                </Text>
-              </Button>
-            </XStack>
-          </YStack>
+          <CheckoutButton
+            totalItems={totalItems}
+            totalPrice={totalPrice}
+            handleCheckout={handleCheckout}
+          />
         )}
       </View>
     </SafeArea>

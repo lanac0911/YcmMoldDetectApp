@@ -33,10 +33,10 @@ export interface ProductMetaData {
 
 // WooCommerce 商品主體
 export interface WooProduct {
-  id: number;
-  name: string;
-  slug: string;
-  permalink: string;
+  id: number; // 商品 ID
+  name: string; // 名稱
+  slug: string; // URL slug
+  permalink: string; // 商品網址
 
   date_created: string;
   date_created_gmt: string;
@@ -52,15 +52,15 @@ export interface WooProduct {
   short_description: string; // HTML
 
   sku: string | null;
-  price: string; // Woo 會以 string 回傳
-  regular_price: string;
-  sale_price: string;
+  price: string; // 顯示價格
+  regular_price: string; // 原價
+  sale_price: string; // 特價
 
   date_on_sale_from: string | null;
   date_on_sale_from_gmt: string | null;
   date_on_sale_to: string | null;
   date_on_sale_to_gmt: string | null;
-  on_sale: boolean;
+  on_sale: boolean; // 是否特價中
 
   purchasable: boolean;
   total_sales: number;
@@ -107,11 +107,11 @@ export interface WooProduct {
 
   purchase_note: string;
 
-  categories: ProductCategory[];
+  categories: ProductCategory[]; // 所屬分類
   brands?: ProductBrand[];
   tags: any[];
 
-  images: ProductImage[];
+  images: ProductImage[]; // 圖片
   attributes: any[];
   default_attributes: any[];
   variations: number[];
@@ -124,7 +124,7 @@ export interface WooProduct {
 
   meta_data: ProductMetaData[];
 
-  stock_status: 'instock' | 'outofstock' | 'onbackorder';
+  stock_status: 'instock' | 'outofstock' | 'onbackorder'; // 庫存狀態
   has_options: boolean;
 
   post_password: string;

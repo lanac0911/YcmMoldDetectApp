@@ -1,17 +1,16 @@
-// src/store/cartStore.ts
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Product } from '@typedef/product';
+import { WooProduct } from '@typedef/productAPI';
 
 export interface CartItem {
-  product: Product;
+  product: WooProduct;
   quantity: number;
 }
 
 interface CartState {
   items: CartItem[];
-  addItem: (product: Product) => void;
+  addItem: (product: WooProduct) => void;
   removeItem: (productId: number) => void;
   increaseQuantity: (productId: number) => void;
   decreaseQuantity: (productId: number) => void;

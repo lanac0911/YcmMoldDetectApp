@@ -5,13 +5,12 @@ import {
   BASE_URL_PREFIX,
   handleApiRequest,
 } from '@services/apiManager';
-import { Product } from '@typedef/product';
 import { WooProduct } from '@typedef/productAPI';
 
 let cancelTokenSource = axios.CancelToken.source();
 
 interface WooProductsState {
-  products: Product[];
+  products: WooProduct[];
   loading: boolean;
   refreshing: boolean;
   nextPage: number;
@@ -29,7 +28,7 @@ const PAGE_SIZE = 3;
 // -------------------------------
 const LOCAL_PREFIX = 'https://127.0.0.1';
 
-const normalizeWooProducts = (items: Product[]): Product[] => {
+const normalizeWooProducts = (items: WooProduct[]): WooProduct[] => {
   return items.map(item => ({
     ...item,
     images: item.images?.map(img => ({
