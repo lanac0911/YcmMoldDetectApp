@@ -6,7 +6,12 @@ export default function SafeArea({ children }: PropsWithChildren) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View flex={1} paddingTop={insets.top} paddingBottom={insets.bottom}>
+    <View
+      flex={1}
+      paddingTop={insets.top}
+      paddingBottom={insets.bottom}
+      bg="$background"
+    >
       {children}
     </View>
   );
