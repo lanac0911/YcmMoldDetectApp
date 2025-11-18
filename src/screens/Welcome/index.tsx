@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { YStack, Text, Circle } from 'tamagui';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, Image, Animated } from 'react-native';
+import { YStack, Text, View } from 'tamagui';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
 import LinearGradient from 'react-native-linear-gradient';
-import { Camera as CameraIcon } from '@tamagui/lucide-icons';
 import SafeArea from '@components/SafeArea';
 import YcmLogo from '@styles/imgs/main-logo.png';
 import { YCM_COLORS } from '@styles/imgs/themes';
@@ -14,11 +13,53 @@ type WelcomeScreenProps = {
 };
 
 export default function Welcome({ navigation }: WelcomeScreenProps) {
+  // 動畫的值
+  const scaleAnim = useRef(new Animated.Value(10)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const fadeInAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
+    Animated.parallel([
+      // 縮放
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        tension: 15,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+      // 旋轉
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      // 透明度
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    // 文字淡入
+    Animated.timing(fadeInAnim, {
+      toValue: 1,
+      duration: 800,
+      delay: 400,
+      useNativeDriver: true,
+    }).start();
+
     setTimeout(() => {
       navigation.navigate('Home');
-    }, 2000);
-  }, []);
+    }, 2500);
+  }, [navigation, scaleAnim, rotateAnim, opacityAnim, fadeInAnim]);
+
+  // 旋轉插值
+  const rotate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['360deg', '0deg'],
+  });
 
   return (
     <LinearGradient
@@ -28,52 +69,76 @@ export default function Welcome({ navigation }: WelcomeScreenProps) {
       <SafeArea>
         <YStack flex={1} justifyContent="space-between" padding="$6">
           <YStack flex={1} justifyContent="center" alignItems="center" gap="$5">
-            {/* LOGO */}
-            <Circle
-              size={180}
-              backgroundColor={YCM_COLORS.webHeader}
-              alignItems="center"
-              justifyContent="center"
+            <Animated.View
+              style={{
+                transform: [{ scale: scaleAnim }, { rotate }],
+                opacity: opacityAnim,
+              }}
             >
-              <Image
-                source={YcmLogo}
-                style={{ width: 180, height: 90 }}
-                resizeMode="contain"
-              />
-            </Circle>
-
-            {/* Title */}
-            <YStack alignItems="center" gap="$3">
-              <Text
-                fontSize="$10"
-                fontWeight="bold"
-                color={YCM_COLORS.dark}
-                textAlign="center"
+              <View
+                width={180}
+                height={180}
+                borderRadius={90}
+                backgroundColor={YCM_COLORS.webHeader}
+                alignItems="center"
+                justifyContent="center"
               >
-                AI 黴菌辨識系統
-              </Text>
+                <Image
+                  source={YcmLogo}
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+              </View>
+            </Animated.View>
 
-              <Text
-                fontSize="$5"
-                color={YCM_COLORS.gray}
-                textAlign="center"
-                lineHeight={24}
-              >
-                用 AI 技術快速檢測黴菌{'\n'}
-                守護您的居家健康
-              </Text>
-            </YStack>
+            <Animated.View
+              style={{
+                opacity: fadeInAnim,
+                transform: [
+                  {
+                    translateY: fadeInAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [20, 0],
+                    }),
+                  },
+                ],
+              }}
+            >
+              <YStack alignItems="center" gap="$3">
+                <Text
+                  fontSize="$10"
+                  fontWeight="bold"
+                  color={YCM_COLORS.dark}
+                  textAlign="center"
+                >
+                  AI 黴菌辨識系統
+                </Text>
+
+                <Text
+                  fontSize="$5"
+                  color={YCM_COLORS.gray}
+                  textAlign="center"
+                  lineHeight={24}
+                >
+                  用 AI 技術快速檢測黴菌{'\n'}
+                  守護您的居家健康
+                </Text>
+              </YStack>
+            </Animated.View>
           </YStack>
 
-          <Text
-            fontSize="$2"
-            color={YCM_COLORS.gray}
-            textAlign="center"
-            marginTop="$3"
-            opacity={0.7}
-          >
-            Powered by Lana
-          </Text>
+          {/* Fade In */}
+          <Animated.View style={{ opacity: fadeInAnim }}>
+            <Text
+              fontSize="$2"
+              color={YCM_COLORS.gray}
+              textAlign="center"
+              marginTop="$3"
+              opacity={0.7}
+            >
+              Powered by Lana
+            </Text>
+          </Animated.View>
         </YStack>
       </SafeArea>
     </LinearGradient>
@@ -87,6 +152,5 @@ const styles = StyleSheet.create({
   logo: {
     width: 180,
     height: 90,
-    marginBottom: 20,
   },
 });
