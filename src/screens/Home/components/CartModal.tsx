@@ -49,7 +49,7 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
           borderBottomWidth={1}
           borderBottomColor="$gray4"
         >
-          <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
+          <Text fontSize="$7" fontWeight="bold" color={YCM_COLORS.dark}>
             購物車 ({totalItems})
           </Text>
 
@@ -88,7 +88,7 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
                   >
                     <XStack justifyContent="space-between" alignItems="center">
                       <YStack flex={1}>
-                        <Text fontSize="$5" fontWeight="700" numberOfLines={2}>
+                        <Text fontSize="$5" fontWeight="bold" numberOfLines={2}>
                           {item.product.name}
                         </Text>
 
@@ -96,7 +96,7 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
                           fontSize="$6"
                           color={YCM_COLORS.primary}
                           marginTop="$2"
-                          fontWeight="800"
+                          fontWeight="bold"
                         >
                           ${item.product.price}
                         </Text>
@@ -135,7 +135,7 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
 
                       <Text
                         fontSize="$5"
-                        fontWeight="700"
+                        fontWeight="bold"
                         marginHorizontal="$4"
                         minWidth={32}
                         textAlign="center"
@@ -169,7 +169,11 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
                   總計
                 </Text>
 
-                <Text fontSize="$8" fontWeight="800" color={YCM_COLORS.primary}>
+                <Text
+                  fontSize="$8"
+                  fontWeight="bold"
+                  color={YCM_COLORS.primary}
+                >
                   ${totalPrice.toFixed(0)}
                 </Text>
               </XStack>
@@ -181,7 +185,7 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
                   onClose();
                 }}
               >
-                <Text color="white" fontSize="$5" fontWeight="700">
+                <Text color="white" fontSize="$5" fontWeight="bold">
                   確認結帳
                 </Text>
               </Button>

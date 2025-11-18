@@ -40,7 +40,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
             <Text fontSize="$2" color="$gray9">
               合計
             </Text>
-            <Text fontSize="$8" fontWeight="800" color={YCM_COLORS.primary}>
+            <Text fontSize="$8" fontWeight="bold" color={YCM_COLORS.primary}>
               ${totalPrice.toFixed(0)}
             </Text>
           </XStack>
@@ -58,7 +58,7 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
           onPress={handleCheckout}
           icon={<ShoppingCart size={20} color="white" />}
         >
-          <Text color="white" fontSize="$5" fontWeight="700">
+          <Text color="white" fontSize="$5" fontWeight="bold">
             結帳
           </Text>
         </Button>

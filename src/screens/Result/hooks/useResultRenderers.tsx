@@ -48,7 +48,7 @@ export const useResultRenderers = ({
         {/* 推薦商品標題 */}
         {products.length > 0 && (
           <YStack gap="$2" marginTop="$5" marginBottom="$3">
-            <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
+            <Text fontSize="$7" fontWeight="bold" color={YCM_COLORS.dark}>
               🛡️ 除霉商品推薦
             </Text>
             <Text fontSize="$3" color="$gray10">

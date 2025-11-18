@@ -44,7 +44,7 @@ export default function Home({ navigation, route }: Props) {
           borderBottomWidth={1}
           borderBottomColor="$gray4"
         >
-          <Text fontSize="$8" fontWeight="700" color={YCM_COLORS.dark}>
+          <Text fontSize="$8" fontWeight="bold" color={YCM_COLORS.dark}>
             發霉檢測
           </Text>
           <Text fontSize="$3" color="$gray10" marginTop="$1">
@@ -179,7 +179,7 @@ export default function Home({ navigation, route }: Props) {
                 borderWidth={2}
                 borderColor="white"
               >
-                <Text fontSize={11} fontWeight="700" color="white">
+                <Text fontSize={11} fontWeight="bold" color="white">
                   {totalItems > 99 ? '99+' : totalItems}
                 </Text>
               </View>

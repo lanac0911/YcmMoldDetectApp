@@ -131,7 +131,7 @@ const Result = ({ route }: { route: ResultScreenRouteProp }) => {
             </View>
           </Pressable>
 
-          <Text fontSize="$6" fontWeight="700" color={YCM_COLORS.dark}>
+          <Text fontSize="$6" fontWeight="bold" color={YCM_COLORS.dark}>
             檢測結果
           </Text>
 

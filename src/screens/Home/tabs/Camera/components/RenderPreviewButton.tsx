@@ -65,7 +65,7 @@ const RenderPreviewButton = ({
             icon={<CameraIcon size={24} color="white" />}
             onPress={handleOpenCamera}
           >
-            <Text color="white" fontSize="$6" fontWeight="700">
+            <Text color="white" fontSize="$6" fontWeight="bold">
               拍照
             </Text>
           </Button>
@@ -92,7 +92,7 @@ const RenderPreviewButton = ({
           disabled={loading}
           opacity={loading ? 0.6 : 1}
         >
-          <Text color="white" fontSize="$6" fontWeight="700">
+          <Text color="white" fontSize="$6" fontWeight="bold">
             {loading ? 'AI 分析中...' : '開始分析'}
           </Text>
         </Button>

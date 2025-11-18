@@ -43,7 +43,7 @@ const LoadingModal = ({ isLoading }: LoadingModalProps) => {
           {/* 標題 */}
           <Text
             fontSize="$5"
-            fontWeight="700"
+            fontWeight="bold"
             color={YCM_COLORS.dark}
             marginTop="$4"
           >

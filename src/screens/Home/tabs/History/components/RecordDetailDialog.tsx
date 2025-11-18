@@ -69,7 +69,7 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
         >
           {/* Header */}
           <XStack justifyContent="space-between" alignItems="center">
-            <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
+            <Text fontSize="$7" fontWeight="bold" color={YCM_COLORS.dark}>
               檢測報告
             </Text>
             <Dialog.Close asChild>

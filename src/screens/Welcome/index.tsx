@@ -46,7 +46,7 @@ export default function Welcome({ navigation }: WelcomeScreenProps) {
             <YStack alignItems="center" gap="$3">
               <Text
                 fontSize="$10"
-                fontWeight="700"
+                fontWeight="bold"
                 color={YCM_COLORS.dark}
                 textAlign="center"
               >

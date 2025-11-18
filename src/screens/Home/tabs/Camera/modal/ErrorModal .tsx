@@ -56,7 +56,7 @@ const ErrorModal = ({
           {/* Title */}
           <Text
             fontSize="$7"
-            fontWeight="800"
+            fontWeight="bold"
             color={theme.error.color}
             marginBottom="$2"
           >
@@ -98,7 +98,7 @@ const ErrorModal = ({
               }}
               pressStyle={theme.errorPressStyle}
             >
-              <Text fontSize="$4" fontWeight="700" color="white">
+              <Text fontSize="$4" fontWeight="bold" color="white">
                 重試
               </Text>
             </Button>

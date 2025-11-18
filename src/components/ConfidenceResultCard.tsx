@@ -38,8 +38,8 @@ export default function ConfidenceResultCard({
           <Icon size={36} color={ui.color} />
         </View>
 
-        <YStack flex={1}>
-          <Text fontSize="$7" fontWeight="800" color={ui.color}>
+        <YStack flex={1} gap="$2">
+          <Text fontSize="$7" fontWeight="bold" color={ui.color}>
             {ui.title}
           </Text>
 
@@ -65,7 +65,7 @@ export default function ConfidenceResultCard({
             <Text fontSize="$3" fontWeight="600" color={ui.color}>
               AI 信心度
             </Text>
-            <Text fontSize="$5" fontWeight="800" color={ui.color}>
+            <Text fontSize="$5" fontWeight="bold" color={ui.color}>
               {confidence}%
             </Text>
           </XStack>

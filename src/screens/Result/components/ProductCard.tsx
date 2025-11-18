@@ -49,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ item, onPress }) => {
                 fontSize="$6"
                 color={YCM_COLORS.primary}
                 marginTop="$2"
-                fontWeight="800"
+                fontWeight="bold"
               >
                 ${item.price}
               </Text>

@@ -47,7 +47,7 @@ export function HistoryCard({
 
             <Text
               fontSize="$4"
-              fontWeight="700"
+              fontWeight="bold"
               color={record.isMoldy ? '$red11' : '$green11'}
             >
               {record.isMoldy ? '檢測到發霉' : '未檢測到發霉'}
