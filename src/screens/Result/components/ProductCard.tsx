@@ -1,11 +1,13 @@
-import React, { memo } from 'react';
-import { Image, StyleSheet, Pressable } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { StyleSheet, Pressable } from 'react-native';
 import { YStack, XStack, Text, Button, View, Card } from 'tamagui';
 import { Plus, Minus } from '@tamagui/lucide-icons';
 import { useCartStore } from '@store/cartStore';
 import { theme, YCM_COLORS } from '@styles/imgs/themes';
 import { WooProduct } from '@typedef/productAPI';
 
+import { Image, Platform } from 'react-native';
+import NoImg from '@styles/imgs/no-image.png';
 interface ProductCardProps {
   item: WooProduct;
   onPress: () => void;
@@ -18,9 +20,19 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ item, onPress }) => {
   const quantity = getItemQuantity(item.id);
   const inCart = quantity > 0;
 
-  const firstImage =
-    item.images?.[0]?.src ||
-    'https://via.placeholder.com/200x200.png?text=No+Image';
+  const src = item.images?.[0]?.src;
+  const finalSource = useMemo(() => {
+    if (!src || typeof src !== 'string') {
+      return NoImg; // 沒圖片
+    }
+    // Android 不支援 AVIF 改用 NoImg
+    if (Platform.OS === 'android' && src.endsWith('.avif')) {
+      return NoImg;
+    }
+    return { uri: src };
+  }, [src]);
+
+  <Image source={finalSource} style={styles.productImage} />;
 
   return (
     <Card
@@ -38,8 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = memo(({ item, onPress }) => {
     >
       <XStack gap="$3">
         {/* 商品圖片 */}
-        <Image source={{ uri: firstImage }} style={styles.productImage} />
-
+        <Image source={finalSource} style={styles.productImage} />
         {/* 商品資訊 */}
         <YStack flex={1} justifyContent="space-between">
           <YStack gap="$1.5">

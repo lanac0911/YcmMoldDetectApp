@@ -106,87 +106,85 @@ const Result = ({ route }: { route: ResultScreenRouteProp }) => {
   });
 
   return (
-    <SafeArea>
-      <View flex={1}>
-        {/* Header Bar */}
-        <XStack
-          backgroundColor="white"
-          paddingHorizontal="$4"
-          paddingVertical="$3"
-          alignItems="center"
-          justifyContent="space-between"
-          borderBottomWidth={1}
-          borderBottomColor="$gray4"
-        >
-          {/* Back */}
-          <Pressable onPress={handleGoBack}>
-            <View
-              width={40}
-              height={40}
-              borderRadius={20}
-              backgroundColor="$gray3"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <ArrowLeft size={24} color={YCM_COLORS.dark} />
-            </View>
-          </Pressable>
+    <View flex={1}>
+      {/* Header Bar */}
+      <XStack
+        backgroundColor="white"
+        paddingHorizontal="$4"
+        paddingVertical="$3"
+        alignItems="center"
+        justifyContent="space-between"
+        borderBottomWidth={1}
+        borderBottomColor="$gray4"
+      >
+        {/* Back */}
+        <Pressable onPress={handleGoBack}>
+          <View
+            width={40}
+            height={40}
+            borderRadius={20}
+            backgroundColor="$gray3"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <ArrowLeft size={24} color={YCM_COLORS.dark} />
+          </View>
+        </Pressable>
 
-          <Text fontSize="$6" fontWeight="bold" color={YCM_COLORS.dark}>
-            檢測結果
-          </Text>
+        <Text fontSize="$6" fontWeight="bold" color={YCM_COLORS.dark}>
+          檢測結果
+        </Text>
 
-          {/* 收藏按鈕 */}
-          <Pressable onPress={handleToggleFavorite}>
-            <View
-              width={40}
-              height={40}
-              borderRadius={20}
-              backgroundColor={isFavorite ? '#FEE2E2' : '$gray3'}
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Heart
-                size={22}
-                color={isFavorite ? '#EF4444' : '#374151'}
-                fill={isFavorite ? '#EF4444' : 'transparent'}
-              />
-            </View>
-          </Pressable>
-        </XStack>
+        {/* 收藏按鈕 */}
+        <Pressable onPress={handleToggleFavorite}>
+          <View
+            width={40}
+            height={40}
+            borderRadius={20}
+            backgroundColor={isFavorite ? '#FEE2E2' : '$gray3'}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Heart
+              size={22}
+              color={isFavorite ? '#EF4444' : '#374151'}
+              fill={isFavorite ? '#EF4444' : 'transparent'}
+            />
+          </View>
+        </Pressable>
+      </XStack>
 
-        {/* 商品列表 */}
-        <FlatList
-          style={{ flex: 1 }}
-          contentContainerStyle={styles.contentContainer}
-          ListHeaderComponent={renderHeader}
-          data={products}
-          renderItem={({ item }) => (
-            <ProductCard item={item} onPress={() => setSelectedProduct(item)} />
-          )}
-          keyExtractor={item => item.id.toString()}
-          ListFooterComponent={renderFooter}
-          ListEmptyComponent={renderEmpty}
-          onEndReached={() => !loading && hasMoreData && getProducts(nextPage)}
-          onEndReachedThreshold={0.3}
-        />
-
-        {/* 詳細資訊 Dialog */}
-        <ProductDetailDialog
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-
-        {/* 結帳按鈕 (fix) */}
-        {totalItems > 0 && (
-          <CheckoutButton
-            totalItems={totalItems}
-            totalPrice={totalPrice}
-            handleCheckout={handleCheckout}
-          />
+      {/* 商品列表 */}
+      <FlatList
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.contentContainer}
+        ListHeaderComponent={renderHeader}
+        data={products}
+        renderItem={({ item }) => (
+          <ProductCard item={item} onPress={() => setSelectedProduct(item)} />
         )}
-      </View>
-    </SafeArea>
+        keyExtractor={item => item.id.toString()}
+        ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmpty}
+        onEndReached={() => !loading && hasMoreData && getProducts(nextPage)}
+        onEndReachedThreshold={0.3}
+      />
+
+      {/* 結帳按鈕 (fix) */}
+      {totalItems > 0 && (
+        <CheckoutButton
+          totalItems={totalItems}
+          totalPrice={totalPrice}
+          handleCheckout={handleCheckout}
+        />
+      )}
+
+      {/* 詳細資訊 Dialog */}
+      <ProductDetailDialog
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+      />
+    </View>
   );
 };
 

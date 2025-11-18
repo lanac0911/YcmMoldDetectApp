@@ -31,16 +31,6 @@ const ProductDetailDialog: React.FC<DialogProps> = ({ product, onClose }) => {
 
   return (
     <Dialog open={!!product} onOpenChange={open => !open && onClose()}>
-      <Adapt when="sm" platform="android">
-        <Sheet animation="medium" snapPoints={[85]} dismissOnSnapToBottom>
-          <Sheet.Overlay />
-          <Sheet.Handle />
-          <Sheet.Frame maxHeight="80%" padding="$4">
-            <Content product={product} onClose={onClose} />
-          </Sheet.Frame>
-        </Sheet>
-      </Adapt>
-
       <Dialog.Portal>
         <Dialog.Overlay
           key="overlay"
