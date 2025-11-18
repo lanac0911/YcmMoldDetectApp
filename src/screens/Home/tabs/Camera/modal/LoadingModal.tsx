@@ -6,7 +6,7 @@ interface LoadingModalProps {
   isLoading: boolean;
 }
 
-const LoadingModal = ({ isLoading }: LoadingModalProps) => {
+export default function LoadingModal({ isLoading }: LoadingModalProps) {
   return (
     <Modal
       visible={isLoading}
@@ -88,6 +88,4 @@ const LoadingModal = ({ isLoading }: LoadingModalProps) => {
       </View>
     </Modal>
   );
-};
-
-export default LoadingModal;
+}

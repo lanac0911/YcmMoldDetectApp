@@ -12,12 +12,12 @@ interface CameraAreaProps {
   setCameraPosition: React.Dispatch<React.SetStateAction<'back' | 'front'>>;
 }
 
-const CameraArea: React.FC<CameraAreaProps> = ({
+export default function CameraArea({
   device,
   setSelectedImage,
   setShowCamera,
   setCameraPosition,
-}) => {
+}: CameraAreaProps) {
   const camera = useRef<Camera>(null);
 
   // 處理：按下拍照的邏輯
@@ -87,9 +87,7 @@ const CameraArea: React.FC<CameraAreaProps> = ({
       </View>
     </View>
   );
-};
-
-export default CameraArea;
+}
 
 const styles = StyleSheet.create({
   controlsContainer: {

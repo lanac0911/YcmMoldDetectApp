@@ -20,14 +20,14 @@ interface PreviewSelectImgProps {
   navigation: NativeStackScreenProps<RootStackParamList, 'Home'>['navigation'];
 }
 
-export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
+export default function PreviewSelectImg({
   selectedImage,
   setSelectedImage,
   setShowCamera,
   loading,
   setIsLoading,
   navigation,
-}) => {
+}: PreviewSelectImgProps) {
   const { hasPermission, requestPermission } = useCameraPermission();
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -146,9 +146,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
       />
     </>
   );
-};
-
-export default PreviewSelectImg;
+}
 
 const styles = StyleSheet.create({
   preview: {

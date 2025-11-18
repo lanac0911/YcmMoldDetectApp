@@ -26,7 +26,7 @@ interface DialogProps {
   onClose: () => void;
 }
 
-const ProductDetailDialog: React.FC<DialogProps> = ({ product, onClose }) => {
+export default function ProductDetailDialog({ product, onClose }: DialogProps) {
   if (!product) return null;
 
   return (
@@ -57,15 +57,15 @@ const ProductDetailDialog: React.FC<DialogProps> = ({ product, onClose }) => {
       </Dialog.Portal>
     </Dialog>
   );
-};
+}
 
-const Content = ({
+function Content({
   product,
   onClose,
 }: {
   product: WooProduct;
   onClose: () => void;
-}) => {
+}) {
   return (
     <YStack gap="$4">
       {/* Header */}
@@ -152,6 +152,4 @@ const Content = ({
       </ScrollView>
     </YStack>
   );
-};
-
-export default ProductDetailDialog;
+}

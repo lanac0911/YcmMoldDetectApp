@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'tamagui';
 
-const Cart = () => {
+export default function Cart() {
   return (
     <View
       flex={1}
@@ -14,6 +14,4 @@ const Cart = () => {
       </Text>
     </View>
   );
-};
-
-export default Cart;
+}

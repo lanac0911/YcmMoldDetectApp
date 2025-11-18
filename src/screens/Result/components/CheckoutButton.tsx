@@ -9,11 +9,11 @@ interface CheckoutButtonProps {
   totalPrice: number;
   handleCheckout: () => void;
 }
-const CheckoutButton: React.FC<CheckoutButtonProps> = ({
+export default function CheckoutButton({
   totalItems,
   totalPrice,
   handleCheckout,
-}) => {
+}: CheckoutButtonProps) {
   return (
     <YStack
       backgroundColor="white"
@@ -65,6 +65,4 @@ const CheckoutButton: React.FC<CheckoutButtonProps> = ({
       </XStack>
     </YStack>
   );
-};
-
-export default CheckoutButton;
+}

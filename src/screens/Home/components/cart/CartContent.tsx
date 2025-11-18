@@ -13,7 +13,7 @@ import { X, Trash2, Plus, Minus, ShoppingBag } from '@tamagui/lucide-icons';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import { CartItem } from '@store/cartStore';
 
-const CartContent = ({
+export default function CartContent({
   data,
   increaseQuantity,
   removeItem,
@@ -23,7 +23,7 @@ const CartContent = ({
   increaseQuantity: (productId: number) => void;
   removeItem: (productId: number) => void;
   decreaseQuantity: (productId: number) => void;
-}) => {
+}) {
   return (
     <>
       {data.length === 0 ? (
@@ -211,9 +211,7 @@ const CartContent = ({
       )}
     </>
   );
-};
-
-export default CartContent;
+}
 
 const styles = StyleSheet.create({
   productImage: {

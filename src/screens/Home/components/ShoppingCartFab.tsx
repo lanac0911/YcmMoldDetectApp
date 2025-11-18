@@ -7,7 +7,7 @@ interface Props {
   onPress: () => void;
 }
 
-const ShoppingCartFab = ({ totalItems, onPress }: Props) => {
+export default function ShoppingCartFab({ totalItems, onPress }: Props) {
   return (
     <YStack position="absolute" bottom={32} right={24} zIndex={200}>
       <Button
@@ -50,6 +50,4 @@ const ShoppingCartFab = ({ totalItems, onPress }: Props) => {
       </Button>
     </YStack>
   );
-};
-
-export default ShoppingCartFab;
+}

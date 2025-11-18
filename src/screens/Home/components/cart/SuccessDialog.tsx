@@ -3,13 +3,13 @@ import { YStack, XStack, Text, View, Dialog } from 'tamagui';
 import { CheckCircle } from '@tamagui/lucide-icons';
 import { YCM_COLORS } from '@styles/imgs/themes';
 
-const SuccessDialog = ({
+export default function ({
   showSuccessDialog,
   checkoutInfo,
 }: {
   showSuccessDialog: boolean;
   checkoutInfo: { items: number; total: number };
-}) => {
+}) {
   return (
     <Dialog modal open={showSuccessDialog}>
       <Dialog.Portal>
@@ -104,6 +104,4 @@ const SuccessDialog = ({
       </Dialog.Portal>
     </Dialog>
   );
-};
-
-export default SuccessDialog;
+}

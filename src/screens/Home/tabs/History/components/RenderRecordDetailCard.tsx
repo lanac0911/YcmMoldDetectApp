@@ -20,10 +20,10 @@ interface RenderRecordDetailCardProps {
   };
 }
 
-const RenderRecordDetailCard = ({
+export default function RenderRecordDetailCard({
   record,
   timeInfo,
-}: RenderRecordDetailCardProps) => {
+}: RenderRecordDetailCardProps) {
   const ui = getConfidenceLevel(record.confidence, record.isMoldy);
 
   // 根據結果選 icon
@@ -190,6 +190,4 @@ const RenderRecordDetailCard = ({
       </YStack>
     </View>
   );
-};
-
-export default RenderRecordDetailCard;
+}
