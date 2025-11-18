@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import Config from 'react-native-config';
 
-export const BASE_URL_PREFIX = Config.BASE_URL_PREFIX;
-const BASE_URL = `${BASE_URL_PREFIX}/wp-json/wc/v3`;
-
-const consumer_key = Config.WOO_CONSUMER_KEY;
-const consumer_secret = Config.WOO_CONSUMER_SECRET;
+import {
+  BASE_URL_PREFIX,
+  WOO_CONSUMER_KEY as consumer_key,
+  WOO_CONSUMER_SECRET as consumer_secret,
+} from '@env';
+export const BASE_URL = `${BASE_URL_PREFIX}/wp-json/wc/v3`;
 
 // ------- Types -------- //
 type AsyncRequest<T> = () => Promise<AxiosResponse<T>>;

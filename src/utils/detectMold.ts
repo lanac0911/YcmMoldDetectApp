@@ -1,7 +1,6 @@
 import RNFS from 'react-native-fs';
-import Config from 'react-native-config';
+import { OPENAI_API_KEY as API_KEY } from '@env';
 
-const API_KEY = Config.OPENAI_API_KEY;
 const API_URL = 'https://api.openai.com/v1/responses';
 
 export interface MoldDetectionResult {

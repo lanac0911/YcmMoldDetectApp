@@ -1,6 +1,9 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
+    "jsx": "react-native",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "*": [
@@ -32,7 +35,7 @@
       ],
       "@typedef/*": [
         "./src/typedef/*"
-      ],
+      ]
     }
   },
   "include": [

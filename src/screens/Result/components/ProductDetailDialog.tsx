@@ -14,7 +14,7 @@ import {
 import { X } from '@tamagui/lucide-icons';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import { WooProduct } from 'typedef/productAPI';
-import { BASE_URL_PREFIX } from '@services/apiManager';
+import { BASE_URL_PREFIX } from '@env';
 import { LOCAL_PREFIX } from '@store/wooProductsStore';
 
 // HTML -> 轉成純文字

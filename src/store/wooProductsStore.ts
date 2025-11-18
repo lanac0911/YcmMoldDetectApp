@@ -1,11 +1,9 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import {
-  apiInstance,
-  BASE_URL_PREFIX,
-  handleApiRequest,
-} from '@services/apiManager';
+import { apiInstance, handleApiRequest } from '@services/apiManager';
 import { WooProduct } from '@typedef/productAPI';
+
+import { BASE_URL_PREFIX } from '@env';
 
 let cancelTokenSource = axios.CancelToken.source();
 

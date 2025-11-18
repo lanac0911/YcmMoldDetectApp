@@ -1,6 +1,6 @@
 import { OpenAI } from 'openai';
-import Config from 'react-native-config';
+import { OPENAI_API_KEY } from '@env';
 
 export const openai = new OpenAI({
-  apiKey: Config.OPENAI_API_KEY,
+  apiKey: OPENAI_API_KEY,
 });
