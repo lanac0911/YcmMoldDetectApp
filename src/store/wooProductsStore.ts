@@ -26,7 +26,7 @@ const PAGE_SIZE = 3;
 // -------------------------------
 // 圖片的 local host -> ngrok url
 // -------------------------------
-const LOCAL_PREFIX = 'https://127.0.0.1';
+export const LOCAL_PREFIX = 'https://127.0.0.1';
 
 const normalizeWooProducts = (items: WooProduct[]): WooProduct[] => {
   return items.map(item => ({

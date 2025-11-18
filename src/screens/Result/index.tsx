@@ -1,6 +1,5 @@
-// src/screens/Result/ResultScreen.tsx
 import React, { useEffect, useCallback, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Image } from 'react-native';
+import { FlatList, Pressable, StyleSheet } from 'react-native';
 import { XStack, Text, View } from 'tamagui';
 import { ArrowLeft, Heart } from '@tamagui/lucide-icons';
 import {
@@ -25,13 +24,16 @@ import { WooProduct } from '@typedef/productAPI';
 type ResultScreenRouteProp = RouteProp<RootStackParamList, 'Result'>;
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
+const Result = ({ route }: { route: ResultScreenRouteProp }) => {
   const { imageUri, isMoldy, confidence, recordId } = route.params;
   const navigation = useNavigation<NavigationProp>();
 
   // 選的商品資料
   const [selectedProduct, setSelectedProduct] = useState<WooProduct | null>(
     null,
+  );
+  const [currentRecordId, setCurrentRecordId] = useState<string | null>(
+    recordId ?? null,
   );
 
   // 商品資料
@@ -57,10 +59,6 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     useCallback(() => {
       clearCart();
     }, [clearCart]),
-  );
-
-  const [currentRecordId, setCurrentRecordId] = useState<string | null>(
-    recordId ?? null,
   );
 
   // 新增一筆紀錄
@@ -94,6 +92,7 @@ const ResultScreen = ({ route }: { route: ResultScreenRouteProp }) => {
     navigation.navigate('Home', { openCart: true });
   };
 
+  // FlatList 的渲染們
   const { renderHeader, renderFooter, renderEmpty } = useResultRenderers({
     imageUri,
     isMoldy,
@@ -198,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResultScreen;
+export default Result;

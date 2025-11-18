@@ -10,7 +10,6 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
-import { DetectionResult } from '@typedef/detection';
 import { analyzeImageMold } from '@utils/detectMold';
 
 interface PreviewSelectImgProps {
@@ -54,6 +53,12 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
     setShowCamera(true);
   };
 
+  const buttonShareStyle = {
+    size: '$6',
+    backgroundColor: YCM_COLORS.primary,
+    pressStyle: { backgroundColor: YCM_COLORS.dark, scale: 0.98 },
+  };
+
   // 處理：選擇相片的邏輯
   const handlePickImage = async () => {
     const result = await launchImageLibrary({
@@ -66,6 +71,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
     }
   };
 
+  // 呼叫 ChatGPT openAPI 分析
   const handleAnalyze = async () => {
     if (!selectedImage) {
       Alert.alert('請選擇圖片', '請先拍照或從相簿選擇圖片');
@@ -101,11 +107,9 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
               resizeMode="contain"
             />
             <Button
-              size="$3"
-              chromeless
-              color="$red10"
+              size="$5"
               onPress={handleRetake}
-              icon={<ImageIcon size={20} color="#EF5350" />}
+              icon={<ImageIcon size={20} />}
             >
               重新選擇
             </Button>
@@ -116,7 +120,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
               <ImageIcon size={60} color="#ccc" />
             </Circle>
             <Text fontSize="$5" color={YCM_COLORS.gray} textAlign="center">
-              拍照或選擇照片進行檢測
+              拍照或選擇照片進行檢測ff
             </Text>
           </YStack>
         )}
@@ -126,9 +130,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
         {!selectedImage ? (
           <>
             <Button
-              size="$6"
-              backgroundColor={YCM_COLORS.primary}
-              pressStyle={{ backgroundColor: YCM_COLORS.dark, scale: 0.98 }}
+              {...buttonShareStyle}
               icon={<CameraIcon size={24} color="white" />}
               onPress={handleOpenCamera}
             >
@@ -137,7 +139,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
               </Text>
             </Button>
             <Button
-              size="$6"
+              {...buttonShareStyle}
               bordered
               borderWidth={2}
               borderColor={YCM_COLORS.primary}
@@ -154,9 +156,7 @@ export const PreviewSelectImg: React.FC<PreviewSelectImgProps> = ({
         ) : (
           <>
             <Button
-              size="$6"
-              backgroundColor={YCM_COLORS.primary}
-              pressStyle={{ backgroundColor: YCM_COLORS.dark, scale: 0.98 }}
+              {...buttonShareStyle}
               icon={<CameraIcon size={24} color="white" />}
               onPress={handleAnalyze}
               disabled={loading}

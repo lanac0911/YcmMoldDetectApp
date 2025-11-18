@@ -1,4 +1,7 @@
-// src/screens/Result/hooks/useResultRenderers.tsx
+/*******************************************************************
+ * 封裝 ResultScreen 會用到的 Header / Footer / Empty 渲染邏輯
+ ******************************************************************/
+
 import React, { useMemo } from 'react';
 import { YStack, Text, Button, View, Image } from 'tamagui';
 import { getConfidenceLevel } from '@utils/getConfidenceLevel';
@@ -30,6 +33,7 @@ export const useResultRenderers = ({
 }: UseResultRenderersProps) => {
   const ui = getConfidenceLevel(confidence, isMoldy);
 
+  // FlatList 的 Header
   const renderHeader = useMemo(() => {
     return (
       <View>
@@ -56,6 +60,7 @@ export const useResultRenderers = ({
     );
   }, [imageUri, ui, confidence, products.length]);
 
+  // FlatList 的 Footer
   const renderFooter = useMemo(() => {
     if (loading && products.length > 0) {
       return (
@@ -97,6 +102,7 @@ export const useResultRenderers = ({
     return null;
   }, [loading, hasMoreData, nextPage, products.length, getProducts]);
 
+  // FlatList 為空時
   const renderEmpty = useMemo(() => {
     if (loading) {
       return (

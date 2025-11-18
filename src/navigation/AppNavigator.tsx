@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Welcome from '@screens/Welcome';
-import Result from '@screens/Result/ResultScreen';
+import Result from '@screens/Result';
 import Cart from '@screens/Cart';
 import Home from '@screens/Home';
 import { DetectionResult } from '@typedef/detection';

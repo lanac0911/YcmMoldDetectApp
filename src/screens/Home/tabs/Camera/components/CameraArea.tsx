@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import { StyleSheet, Pressable, Alert, View as RNView } from 'react-native';
-import { YStack, XStack, Circle } from 'tamagui';
+import { StyleSheet, Pressable, Alert } from 'react-native';
+import { YStack, XStack, View, Button } from 'tamagui';
 import { X, FlipHorizontal } from '@tamagui/lucide-icons';
 import { Camera, CameraDevice } from 'react-native-vision-camera';
 import { YCM_COLORS } from '@styles/imgs/themes';
@@ -47,7 +47,7 @@ const CameraArea: React.FC<CameraAreaProps> = ({
   };
 
   return (
-    <RNView style={{ flex: 1, backgroundColor: 'black' }}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
       <Camera
         ref={camera}
         style={StyleSheet.absoluteFill}
@@ -56,32 +56,36 @@ const CameraArea: React.FC<CameraAreaProps> = ({
         photo={true}
       />
 
-      {/* 控制層 */}
-      <RNView style={styles.controlsContainer}>
+      {/* 控制按鈕 */}
+      <View style={styles.controlsContainer}>
         <XStack padding="$4" justifyContent="space-between" alignItems="center">
-          <Pressable onPress={handleCloseCamera}>
-            <Circle size={44} backgroundColor="rgba(0,0,0,0.5)">
-              <X size={24} color="white" />
-            </Circle>
-          </Pressable>
+          {/* 關閉相機 */}
+          <Button
+            onPress={handleCloseCamera}
+            icon={<X size={24} color="white" />}
+            circular
+            style={styles.buttons}
+          />
 
-          <Pressable onPress={handleFlipCamera}>
-            <Circle size={44} backgroundColor="rgba(0,0,0,0.5)">
-              <FlipHorizontal size={24} color="white" />
-            </Circle>
-          </Pressable>
+          {/* 翻轉相機 */}
+          <Button
+            onPress={handleFlipCamera}
+            icon={<FlipHorizontal size={24} color="white" />}
+            circular
+            style={styles.buttons}
+          />
         </XStack>
 
         {/* 拍照按鈕 */}
         <YStack style={styles.captureButtonContainer}>
-          <Pressable onPress={handleTakePhoto}>
-            <RNView style={styles.captureButton}>
-              <RNView style={styles.captureButtonInner} />
-            </RNView>
-          </Pressable>
+          <Button unstyled onPress={handleTakePhoto}>
+            <View style={styles.captureButton}>
+              <View style={styles.captureButtonInner} />
+            </View>
+          </Button>
         </YStack>
-      </RNView>
-    </RNView>
+      </View>
+    </View>
   );
 };
 
@@ -91,8 +95,11 @@ const styles = StyleSheet.create({
   controlsContainer: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: 60, // 為狀態欄留空間
+    paddingTop: 60,
     paddingBottom: 40,
+  },
+  buttons: {
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   captureButtonContainer: {
     alignItems: 'center',

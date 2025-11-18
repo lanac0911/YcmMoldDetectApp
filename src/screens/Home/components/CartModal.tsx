@@ -27,8 +27,8 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
     <Sheet
       modal
       open={isOpen}
-      onOpenChange={open => !open && onClose()}
-      snapPoints={[85, 50]} // 85% / 50%
+      onOpenChange={(open: boolean) => !open && onClose()}
+      snapPoints={[85, 50]}
       dismissOnSnapToBottom
     >
       <Sheet.Overlay

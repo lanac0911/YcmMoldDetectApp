@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useCameraDevice } from 'react-native-vision-camera';
 import { YStack } from 'tamagui';
 import { useFocusEffect } from '@react-navigation/native';
-import CameraArea from './CameraArea';
-import PreviewSelectImg from './PreviewSelectImg';
+import CameraArea from './components/CameraArea';
+import PreviewSelectImg from './components/PreviewSelectImg';
 
 interface DetectionTabProps {
   navigation: any;

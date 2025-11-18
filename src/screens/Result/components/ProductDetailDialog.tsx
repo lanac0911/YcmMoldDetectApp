@@ -9,14 +9,12 @@ import {
   Text,
   Button,
   Image,
-  View,
 } from 'tamagui';
 import { X } from '@tamagui/lucide-icons';
 import { YCM_COLORS } from '@styles/imgs/themes';
 import { WooProduct } from 'typedef/productAPI';
 import { BASE_URL_PREFIX } from '@services/apiManager';
-
-const LOCAL_PREFIX = 'https://127.0.0.1';
+import { LOCAL_PREFIX } from '@store/wooProductsStore';
 
 // HTML -> 轉成純文字
 const stripHtml = (html?: string) =>

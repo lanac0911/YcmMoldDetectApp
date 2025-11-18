@@ -52,7 +52,7 @@ export default function Home({ navigation, route }: Props) {
           </Text>
         </YStack>
 
-        {/* Tab 列表 - 膠囊式設計 */}
+        {/* Tab 列表 */}
         <YStack
           backgroundColor="white"
           paddingHorizontal="$4"

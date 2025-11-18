@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { YStack, Text, Button, Circle } from 'tamagui';
+import { YStack, Text, Circle } from 'tamagui';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@navigation/AppNavigator';
 import LinearGradient from 'react-native-linear-gradient';
