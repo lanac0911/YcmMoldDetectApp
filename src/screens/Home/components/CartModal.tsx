@@ -1,15 +1,16 @@
-import React from 'react';
-import { Sheet, YStack, XStack, Text, View, Button, ScrollView } from 'tamagui';
-import { X, Trash2, Plus, Minus } from '@tamagui/lucide-icons';
+import React, { useState } from 'react';
+import { Sheet } from 'tamagui';
 import { useCartStore } from '@store/cartStore';
-import { YCM_COLORS } from '@styles/imgs/themes';
+import SuccessDialog from './cart/SuccessDialog';
+import CartHeader from './cart/CartHeader';
+import CartContent from './cart/CartContent';
+import CartFooter from './cart/CartFooter';
 
 interface CartSheetProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
+const CartSheet = ({ isOpen, onClose }: CartSheetProps) => {
   const {
     items,
     getTotalItems,
@@ -20,185 +21,81 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
     clearCart,
   } = useCartStore();
 
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [checkoutInfo, setCheckoutInfo] = useState({ items: 0, total: 0 });
+
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
+  // 結帳
+  const handleCheckout = () => {
+    setCheckoutInfo({
+      items: totalItems,
+      total: totalPrice,
+    });
+
+    // 關閉 Sheet
+    onClose();
+
+    // 顯示 Dialog
+    setTimeout(() => {
+      setShowSuccessDialog(true);
+
+      // 關閉 Dialog
+      setTimeout(() => {
+        setShowSuccessDialog(false);
+        clearCart();
+      }, 3000);
+    }, 300);
+  };
+
   return (
-    <Sheet
-      modal
-      open={isOpen}
-      onOpenChange={(open: boolean) => !open && onClose()}
-      snapPoints={[85, 50]}
-      dismissOnSnapToBottom
-    >
-      <Sheet.Overlay
-        animation="quick"
-        enterStyle={{ opacity: 0 }}
-        exitStyle={{ opacity: 0 }}
-        backgroundColor="rgba(0,0,0,0.4)"
+    <>
+      <Sheet
+        modal
+        open={isOpen}
+        disableDrag
+        onOpenChange={(open: boolean) => !open && onClose()}
+        snapPoints={[85, 50]}
+        dismissOnSnapToBottom
+      >
+        <Sheet.Overlay
+          animation="quick"
+          enterStyle={{ opacity: 0 }}
+          exitStyle={{ opacity: 0 }}
+          backgroundColor="rgba(0,0,0,0.5)"
+        />
+
+        <Sheet.Handle backgroundColor="$gray6" />
+
+        <Sheet.Frame padding="$0" backgroundColor="#F5F5F5">
+          {/* Header */}
+          <CartHeader totalItems={totalItems} onClose={onClose} />
+
+          {/* Content */}
+          <CartContent
+            data={items}
+            increaseQuantity={increaseQuantity}
+            removeItem={removeItem}
+            decreaseQuantity={decreaseQuantity}
+          />
+
+          {/* Footer */}
+          <CartFooter
+            totalItems={totalItems}
+            totalPrice={totalPrice}
+            onCheckout={handleCheckout}
+          />
+        </Sheet.Frame>
+      </Sheet>
+
+      {/* 結帳成功 Dialog */}
+      <SuccessDialog
+        showSuccessDialog={showSuccessDialog}
+        checkoutInfo={checkoutInfo}
       />
-
-      <Sheet.Handle />
-
-      <Sheet.Frame padding="$0" backgroundColor="#F5F5F5">
-        {/* Header */}
-        <XStack
-          justifyContent="space-between"
-          alignItems="center"
-          padding="$4"
-          borderBottomWidth={1}
-          borderBottomColor="$gray4"
-        >
-          <Text fontSize="$7" fontWeight="bold" color={YCM_COLORS.dark}>
-            購物車 ({totalItems})
-          </Text>
-
-          <Button circular size="$3" backgroundColor="$gray3" onPress={onClose}>
-            <X size={20} color="$gray10" />
-          </Button>
-        </XStack>
-
-        {/* Content */}
-        {items.length === 0 ? (
-          <YStack
-            flex={1}
-            justifyContent="center"
-            alignItems="center"
-            padding="$6"
-          >
-            <Text fontSize="$6" color="$gray10">
-              購物車是空的
-            </Text>
-            <Text fontSize="$3" color="$gray9" marginTop="$2">
-              快去挑選商品吧！
-            </Text>
-          </YStack>
-        ) : (
-          <>
-            <ScrollView style={{ flex: 1 }}>
-              <YStack padding="$4" gap="$3">
-                {items.map(item => (
-                  <YStack
-                    key={item.product.id}
-                    backgroundColor="white"
-                    padding="$3"
-                    borderRadius={12}
-                    borderWidth={1}
-                    borderColor="$gray4"
-                  >
-                    <XStack justifyContent="space-between" alignItems="center">
-                      <YStack flex={1}>
-                        <Text fontSize="$5" fontWeight="bold" numberOfLines={2}>
-                          {item.product.name}
-                        </Text>
-
-                        <Text
-                          fontSize="$6"
-                          color={YCM_COLORS.primary}
-                          marginTop="$2"
-                          fontWeight="bold"
-                        >
-                          ${item.product.price}
-                        </Text>
-                      </YStack>
-
-                      <Button
-                        circular
-                        size="$3"
-                        backgroundColor="$red3"
-                        onPress={() => removeItem(item.product.id)}
-                      >
-                        <Trash2 size={16} color="$red10" />
-                      </Button>
-                    </XStack>
-
-                    {/* 數量控制 */}
-                    <XStack
-                      marginTop="$3"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      backgroundColor="$gray2"
-                      borderRadius={8}
-                      paddingVertical="$1.5"
-                      paddingHorizontal="$2"
-                      alignSelf="flex-start"
-                    >
-                      <Button
-                        size="$3"
-                        circular
-                        backgroundColor="white"
-                        borderWidth={1}
-                        borderColor="$gray4"
-                        icon={<Minus size={14} color={YCM_COLORS.primary} />}
-                        onPress={() => decreaseQuantity(item.product.id)}
-                      />
-
-                      <Text
-                        fontSize="$5"
-                        fontWeight="bold"
-                        marginHorizontal="$4"
-                        minWidth={32}
-                        textAlign="center"
-                      >
-                        {item.quantity}
-                      </Text>
-
-                      <Button
-                        size="$3"
-                        circular
-                        backgroundColor={YCM_COLORS.primary}
-                        icon={<Plus size={14} color="white" />}
-                        onPress={() => increaseQuantity(item.product.id)}
-                      />
-                    </XStack>
-                  </YStack>
-                ))}
-              </YStack>
-            </ScrollView>
-
-            {/* Footer */}
-            <YStack
-              backgroundColor="white"
-              padding="$4"
-              borderTopWidth={1}
-              borderTopColor="$gray4"
-              gap="$3"
-            >
-              <XStack justifyContent="space-between" alignItems="center">
-                <Text fontSize="$5" color="$gray11">
-                  總計
-                </Text>
-
-                <Text
-                  fontSize="$8"
-                  fontWeight="bold"
-                  color={YCM_COLORS.primary}
-                >
-                  ${totalPrice.toFixed(0)}
-                </Text>
-              </XStack>
-
-              <Button
-                size="$5"
-                backgroundColor={YCM_COLORS.primary}
-                onPress={() => {
-                  onClose();
-                }}
-              >
-                <Text color="white" fontSize="$5" fontWeight="bold">
-                  確認結帳
-                </Text>
-              </Button>
-
-              <Button size="$4" backgroundColor="$red4" onPress={clearCart}>
-                <Text color="$red11" fontSize="$4" fontWeight="bold">
-                  清空購物車
-                </Text>
-              </Button>
-            </YStack>
-          </>
-        )}
-      </Sheet.Frame>
-    </Sheet>
+    </>
   );
-}
+};
+
+export default CartSheet;
