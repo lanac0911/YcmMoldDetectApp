@@ -9,7 +9,7 @@ import { DetectionResult } from '@typedef/detection';
 
 export type RootStackParamList = {
   Welcome: undefined;
-  Home: { openCart?: boolean } | undefined;
+  Home: { openCart?: boolean; goHistory?: boolean } | undefined;
   Camera: undefined;
   Result: DetectionResult;
   Cart: undefined;

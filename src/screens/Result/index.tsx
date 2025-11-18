@@ -86,8 +86,9 @@ const Result = ({ route }: { route: ResultScreenRouteProp }) => {
 
   // 返回
   const handleGoBack = useCallback(() => {
-    navigation.goBack();
+    navigation.navigate('Home', { goHistory: true });
   }, [navigation]);
+
   const handleCheckout = () => {
     navigation.navigate('Home', { openCart: true });
   };

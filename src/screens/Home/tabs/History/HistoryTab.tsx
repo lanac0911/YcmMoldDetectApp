@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Alert, FlatList } from 'react-native';
 import { View, YStack, XStack, Button, Text } from 'tamagui';
 
@@ -15,6 +15,7 @@ import { formatDate, formatFullDate } from '@utils/date';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/AppNavigator';
 import { theme } from '@styles/imgs/themes';
+import { useFocusEffect } from '@react-navigation/native';
 
 type HistoryTabProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -33,6 +34,13 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   // Dialog 管理
   const [selectedRecord, setSelectedRecord] = useState<DetectionRecord | null>(
     null,
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      // 強制 rerender
+      setPage(1);
+    }, []),
   );
 
   // 篩選（全部/收藏）

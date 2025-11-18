@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DetectionTab from '@screens/Home/tabs/Camera/DetectionTab';
 import HistoryTab from '@screens/Home/tabs/History/HistoryTab';
@@ -7,7 +7,17 @@ import { YCM_COLORS } from '@styles/imgs/themes';
 
 const Tab = createBottomTabNavigator();
 
-export default function HomeTabs() {
+import { useNavigation } from '@react-navigation/native';
+
+export default function HomeTabs({ goHistory }: { goHistory: boolean }) {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (goHistory) {
+      navigation.navigate('History' as never);
+    }
+  }, [goHistory]);
+
   return (
     <Tab.Navigator
       screenOptions={{

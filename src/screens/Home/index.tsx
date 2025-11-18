@@ -24,6 +24,12 @@ export default function Home({ navigation, route }: Props) {
     }
   }, [route.params?.openCart]);
 
+  useEffect(() => {
+    if (route.params?.goHistory) {
+      navigation.setParams({ goHistory: undefined });
+    }
+  }, [route.params?.goHistory]);
+
   return (
     <SafeArea>
       <YStack flex={1} bg="$background">
@@ -45,7 +51,7 @@ export default function Home({ navigation, route }: Props) {
         </YStack>
 
         {/* Bottom Tabs */}
-        <HomeTabs />
+        <HomeTabs goHistory={!!route.params?.goHistory} />
 
         {/* Cart FAB */}
         <ShoppingCartFab
