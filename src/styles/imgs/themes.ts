@@ -7,3 +7,11 @@ export const YCM_COLORS = {
   gray: '#6C757D',
   webHeader: '#003F35',
 };
+
+export const theme = {
+  error: {
+    color: '#DC2626',
+  },
+  errorPressStyle: { backgroundColor: '#B91C1C', scale: 0.98 },
+  whitePressStyle: { backgroundColor: '#F0F8F0', scale: 0.98 },
+};
