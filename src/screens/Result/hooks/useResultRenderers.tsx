@@ -81,7 +81,7 @@ export const useResultRenderers = ({
             pressStyle={{ opacity: 0.8, scale: 0.98 }}
             onPress={() => getProducts(nextPage)}
           >
-            <Text fontSize="$4" fontWeight="600">
+            <Text fontSize="$4" fontWeight="bold">
               載入更多商品
             </Text>
           </Button>
@@ -117,7 +117,7 @@ export const useResultRenderers = ({
     return (
       <YStack padding="$8" alignItems="center" gap="$3">
         <Text fontSize="$8">📦</Text>
-        <Text fontSize="$5" fontWeight="600" color="$gray11">
+        <Text fontSize="$5" fontWeight="bold" color="$gray11">
           暫無推薦商品
         </Text>
         <Text fontSize="$3" color="$gray10" textAlign="center">

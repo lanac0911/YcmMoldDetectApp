@@ -62,7 +62,7 @@ export default function ConfidenceResultCard({
       {showProgressBar && (
         <YStack gap="$2" marginBottom="$3">
           <XStack justifyContent="space-between">
-            <Text fontSize="$3" fontWeight="600" color={ui.color}>
+            <Text fontSize="$3" fontWeight="bold" color={ui.color}>
               AI 信心度
             </Text>
             <Text fontSize="$5" fontWeight="bold" color={ui.color}>
@@ -94,7 +94,7 @@ export default function ConfidenceResultCard({
             backgroundColor={ui.borderColor}
             marginVertical="$3"
           />
-          <Text fontSize="$4" fontWeight="600" color={ui.color}>
+          <Text fontSize="$4" fontWeight="bold" color={ui.color}>
             💡 建議
           </Text>
           <Text fontSize="$3" color={ui.color} lineHeight={20}>

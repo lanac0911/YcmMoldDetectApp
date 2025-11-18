@@ -132,7 +132,7 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
             >
               <Text
                 fontSize="$4"
-                fontWeight="600"
+                fontWeight="bold"
                 color={isFavorite ? '#DC2626' : '$gray11'}
               >
                 {isFavorite ? '取消收藏' : '加入收藏'}
@@ -151,7 +151,7 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
                 scale: 0.98,
               }}
             >
-              <Text fontSize="$4" fontWeight="600" color="$red11">
+              <Text fontSize="$4" fontWeight="bold" color="$red11">
                 刪除
               </Text>
             </Button>

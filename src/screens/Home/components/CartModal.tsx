@@ -191,7 +191,7 @@ export default function CartSheet({ isOpen, onClose }: CartSheetProps) {
               </Button>
 
               <Button size="$4" backgroundColor="$red4" onPress={clearCart}>
-                <Text color="$red11" fontSize="$4" fontWeight="600">
+                <Text color="$red11" fontSize="$4" fontWeight="bold">
                   清空購物車
                 </Text>
               </Button>

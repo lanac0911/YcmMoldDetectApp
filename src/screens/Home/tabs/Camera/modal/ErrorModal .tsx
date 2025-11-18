@@ -83,7 +83,7 @@ const ErrorModal = ({
               onPress={() => setShowErrorModal(false)}
               pressStyle={{ backgroundColor: '$gray5', scale: 0.98 }}
             >
-              <Text fontSize="$4" fontWeight="600" color="$gray11">
+              <Text fontSize="$4" fontWeight="bold" color="$gray11">
                 取消
               </Text>
             </Button>

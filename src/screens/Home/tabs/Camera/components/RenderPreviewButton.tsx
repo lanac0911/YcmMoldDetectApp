@@ -79,7 +79,7 @@ const RenderPreviewButton = ({
             icon={<ImageIcon size={24} color={YCM_COLORS.primary} />}
             onPress={handlePickImage}
           >
-            <Text color={YCM_COLORS.primary} fontSize="$6" fontWeight="600">
+            <Text color={YCM_COLORS.primary} fontSize="$6" fontWeight="bold">
               從相簿選擇
             </Text>
           </Button>
