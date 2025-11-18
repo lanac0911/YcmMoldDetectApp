@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, XStack, YStack, Text, Button, Image } from 'tamagui';
 import { Heart, AlertCircle, CheckCircle } from '@tamagui/lucide-icons';
 import { DetectionRecord } from '@store/detectionHistoryStore';
+import { theme } from '@styles/imgs/themes';
 
 interface Props {
   record: DetectionRecord;
@@ -40,15 +41,15 @@ export function HistoryCard({
         <YStack f={1} gap="$2">
           <XStack ai="center" gap="$2">
             {record.isMoldy ? (
-              <AlertCircle size={20} color="$red10" />
+              <AlertCircle size={20} color={theme.error.color} />
             ) : (
-              <CheckCircle size={20} color="$green10" />
+              <CheckCircle size={20} color={theme.sucess.color} />
             )}
 
             <Text
               fontSize="$4"
               fontWeight="bold"
-              color={record.isMoldy ? '$red11' : '$green11'}
+              color={record.isMoldy ? theme.error.color : theme.sucess.color}
             >
               {record.isMoldy ? '檢測到發霉' : '未檢測到發霉'}
             </Text>
@@ -68,12 +69,12 @@ export function HistoryCard({
         <Button
           circular
           size="$3"
-          bg={record.isFavorite ? '$red4' : '$gray4'}
+          bg={record.isFavorite ? theme.heartIcon.bg : '$gray4'}
           icon={
             <Heart
               size={18}
-              color={record.isFavorite ? '$red10' : '$gray10'}
-              fill={record.isFavorite ? '$red10' : 'transparent'}
+              color={record.isFavorite ? theme.heartIcon.fill : '$gray10'}
+              fill={record.isFavorite ? theme.heartIcon.fill : 'transparent'}
             />
           }
           onPress={onToggleFavorite}

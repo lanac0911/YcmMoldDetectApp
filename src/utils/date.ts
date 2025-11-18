@@ -1,3 +1,5 @@
+import { DetectionRecord } from '@store/detectionHistoryStore';
+
 export const formatDate = (ts: number) => {
   const diff = Date.now() - ts;
   const mins = Math.floor(diff / 60000);
@@ -24,4 +26,26 @@ export const formatFullDate = (ts: number) => {
     hour: '2-digit',
     minute: '2-digit',
   });
+};
+
+// DetailCard 的時間格式
+export const getTimeInfo = (record: DetectionRecord) => {
+  const date = new Date(record.timestamp);
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  const mins = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  let timeAgo = '';
+  if (mins < 1) timeAgo = '剛剛';
+  else if (mins < 60) timeAgo = `${mins} 分鐘前`;
+  else if (hours < 24) timeAgo = `${hours} 小時前`;
+  else if (days < 7) timeAgo = `${days} 天前`;
+  else timeAgo = formatFullDate(record.timestamp);
+
+  return {
+    fullDate: formatFullDate(record.timestamp),
+    timeAgo,
+  };
 };

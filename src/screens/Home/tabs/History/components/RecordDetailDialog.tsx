@@ -1,18 +1,20 @@
 import React, { memo } from 'react';
-import { Dialog, XStack, YStack, Text, View, Button } from 'tamagui';
-import { Image, StyleSheet } from 'react-native';
 import {
-  AlertCircle,
-  CheckCircle,
-  HelpCircle,
-  Heart,
-  Trash2,
-  X,
-} from '@tamagui/lucide-icons';
+  Dialog,
+  XStack,
+  YStack,
+  Text,
+  Button,
+  ScrollView,
+  Image,
+} from 'tamagui';
+import { Heart, Trash2, X, Clock } from '@tamagui/lucide-icons';
+
 import { DetectionRecord } from '@store/detectionHistoryStore';
 import { getConfidenceLevel } from '@utils/getConfidenceLevel';
-import { YCM_COLORS } from '@styles/imgs/themes';
-import ConfidenceResultCard from '@components/ConfidenceResultCard';
+import { theme, YCM_COLORS } from '@styles/imgs/themes';
+import RenderRecordDetailCard from './RenderRecordDetailCard';
+import { getTimeInfo } from '@utils/date';
 
 interface Props {
   record: DetectionRecord | null | undefined;
@@ -35,6 +37,8 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
 
   const ui = getConfidenceLevel(record.confidence, record.isMoldy);
 
+  const timeInfo = getTimeInfo(record);
+
   return (
     <Dialog modal open={!!record} onOpenChange={open => !open && onClose()}>
       <Dialog.Portal>
@@ -49,122 +53,115 @@ export const RecordDetailDialog = memo(function RecordDetailDialog({
 
         <Dialog.Content
           key="content"
-          animation={[
-            'quick',
-            {
-              opacity: { overshootClamping: true },
-              scale: { overshootClamping: true },
-            },
-          ]}
-          enterStyle={{ opacity: 0, scale: 0.9, y: -20 }}
-          exitStyle={{ opacity: 0, scale: 0.95, y: 10 }}
           bordered
           elevate
-          borderRadius={20}
+          animation="quick"
           width="90%"
           maxWidth={420}
+          height="80%"
           backgroundColor="white"
+          borderRadius={20}
           padding="$4"
-          gap="$4"
         >
-          {/* Header */}
-          <XStack justifyContent="space-between" alignItems="center">
-            <Text fontSize="$7" fontWeight="bold" color={YCM_COLORS.dark}>
-              檢測報告
-            </Text>
-            <Dialog.Close asChild>
-              <Button
-                size="$3"
-                circular
-                backgroundColor="$gray3"
-                icon={<X size={20} color="$gray10" />}
-                onPress={onClose}
-                pressStyle={{ backgroundColor: '$gray4', scale: 0.95 }}
-              />
-            </Dialog.Close>
-          </XStack>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Header */}
+            <XStack
+              justifyContent="space-between"
+              alignItems="center"
+              marginBottom="$3"
+            >
+              <XStack gap="$2">
+                <Text fontSize="$7" fontWeight="700" color={YCM_COLORS.dark}>
+                  📋 檢測報告
+                </Text>
 
-          {/* 圖片 */}
-          <View
-            width="100%"
-            borderRadius={12}
-            overflow="hidden"
-            backgroundColor="$gray3"
-            borderWidth={3}
-            borderColor={ui.borderColor}
-          >
-            <Image
-              source={{ uri: record.imageUri }}
-              style={styles.image}
-              resizeMode="cover"
-            />
-          </View>
+                <XStack alignItems="center" gap="$2" marginTop="$1">
+                  <Clock size={14} color="$gray10" />
+                  <Text fontSize="$2" color="$gray10">
+                    {timeInfo.timeAgo}
+                  </Text>
+                </XStack>
+              </XStack>
 
-          {/* 結果 card */}
-          <ConfidenceResultCard
-            ui={ui}
-            confidence={record.confidence}
-            showSuggestion={false}
-          />
-
-          {/* 操作按鈕 */}
-          <XStack gap="$2">
-            {/* 收藏按鈕 */}
-            <Button
-              flex={1}
-              size="$4"
-              backgroundColor={isFavorite ? '#FEE2E2' : '$gray4'}
-              borderWidth={isFavorite ? 1 : 0}
-              borderColor={isFavorite ? '#FCA5A5' : 'transparent'}
-              icon={
-                <Heart
-                  size={20}
-                  color={isFavorite ? '#EF4444' : '#6B7280'}
-                  fill={isFavorite ? '#EF4444' : 'transparent'}
-                  strokeWidth={2}
+              <Dialog.Close asChild>
+                <Button
+                  size="$3"
+                  circular
+                  backgroundColor="$gray3"
+                  icon={<X size={20} color="$gray10" />}
+                  onPress={onClose}
+                  pressStyle={{ backgroundColor: '$gray4', scale: 0.95 }}
                 />
-              }
-              onPress={onToggleFavorite}
-              pressStyle={{
-                backgroundColor: isFavorite ? '#FEE2E2' : '$gray5',
-                scale: 0.98,
-              }}
-            >
-              <Text
-                fontSize="$4"
-                fontWeight="bold"
-                color={isFavorite ? '#DC2626' : '$gray11'}
-              >
-                {isFavorite ? '取消收藏' : '加入收藏'}
-              </Text>
-            </Button>
+              </Dialog.Close>
+            </XStack>
 
-            {/* 刪除按鈕 */}
-            <Button
-              flex={1}
-              size="$4"
-              backgroundColor="$red4"
-              icon={<Trash2 size={20} color="$red10" />}
-              onPress={onDelete}
-              pressStyle={{
-                backgroundColor: '$red5',
-                scale: 0.98,
-              }}
+            {/* 檢測圖片 */}
+            <YStack
+              width="100%"
+              borderRadius={12}
+              overflow="hidden"
+              backgroundColor="$gray3"
+              borderWidth={3}
+              borderColor={ui.borderColor}
+              marginBottom="$4"
             >
-              <Text fontSize="$4" fontWeight="bold" color="$red11">
-                刪除
-              </Text>
-            </Button>
-          </XStack>
+              <Image
+                source={{ uri: record.imageUri }}
+                width="100%"
+                height={240}
+                resizeMode="cover"
+              />
+            </YStack>
+
+            {/* 詳細資訊卡片 */}
+            <RenderRecordDetailCard record={record} timeInfo={timeInfo} />
+
+            {/* --- 按鈕 --- */}
+            <XStack gap="$2" marginBottom="$3">
+              {/* 收藏 */}
+              <Button
+                flex={1}
+                size="$4"
+                backgroundColor={isFavorite ? theme.heartIcon.bg : '$gray4'}
+                borderWidth={isFavorite ? 1 : 0}
+                borderColor={
+                  isFavorite ? theme.heartIcon.border : 'transparent'
+                }
+                icon={
+                  <Heart
+                    size={20}
+                    color={
+                      isFavorite ? theme.heartIcon.fill : theme.heartIcon.unfill
+                    }
+                    fill={isFavorite ? theme.heartIcon.fill : 'transparent'}
+                  />
+                }
+                onPress={onToggleFavorite}
+              >
+                <Text
+                  fontSize="$4"
+                  color={isFavorite ? theme.error.color : '$gray11'}
+                >
+                  {isFavorite ? '取消收藏' : '加入收藏'}
+                </Text>
+              </Button>
+
+              {/* 刪除 */}
+              <Button
+                flex={1}
+                size="$4"
+                bg={theme.error.color}
+                icon={<Trash2 size={20} color="white" />}
+                onPress={onDelete}
+              >
+                <Text fontSize="$4" fontWeight="600" color="white">
+                  刪除
+                </Text>
+              </Button>
+            </XStack>
+          </ScrollView>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog>
   );
-});
-
-const styles = StyleSheet.create({
-  image: {
-    width: '100%',
-    height: 240,
-  },
 });
