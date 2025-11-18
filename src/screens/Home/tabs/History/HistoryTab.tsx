@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Alert, FlatList } from 'react-native';
 import { YStack } from 'tamagui';
 
@@ -8,7 +8,7 @@ import {
 } from '@store/detectionHistoryStore';
 
 import { HistoryEmpty } from './components/HistoryEmpty';
-import { FilterButtons } from './components/FilterButtons';
+import { FilterTabs } from './components/FilterTabs';
 import { HistoryCard } from './components/HistoryCard';
 import { RecordDetailDialog } from './components/RecordDetailDialog';
 import { formatDate, formatFullDate } from '@utils/date';
@@ -48,19 +48,20 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
 
   // 滑到底 → 加載下一頁
   const loadMore = () => {
-    if (hasMore) {
-      setPage(prev => prev + 1);
-    }
+    if (hasMore) setPage(prev => prev + 1);
   };
 
+  // 點擊 card → 開啟 Dialog
   const handleRecordPress = (record: DetectionRecord) => {
     setSelectedRecord(record);
   };
 
+  // Dialog 收藏
   const handleToggleFavoriteInDialog = () => {
     if (selectedRecord) toggleFavorite(selectedRecord.id);
   };
 
+  // Dialog 刪除
   const handleDeleteInDialog = () => {
     if (!selectedRecord) return;
 
@@ -83,6 +84,7 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
     ]);
   };
 
+  // 更新後的 record（收藏切換後重新 sync）
   const currentRecord = selectedRecord
     ? records.find(r => r.id === selectedRecord.id)
     : null;
@@ -96,7 +98,7 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   if (showFavoritesOnly && filteredRecords.length === 0) {
     return (
       <YStack flex={1} backgroundColor="$background">
-        <FilterButtons
+        <FilterTabs
           showFavoritesOnly={showFavoritesOnly}
           total={records.length}
           favCount={records.filter(r => r.isFavorite).length}
@@ -113,8 +115,8 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   return (
     <>
       <YStack flex={1} backgroundColor="$background" px="$4">
-        {/* 篩選 */}
-        <FilterButtons
+        {/* ▸ 篩選 Tabs */}
+        <FilterTabs
           showFavoritesOnly={showFavoritesOnly}
           total={records.length}
           favCount={records.filter(r => r.isFavorite).length}
@@ -127,7 +129,10 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
         <FlatList
           data={paginatedRecords}
           keyExtractor={item => item.id}
-          contentContainerStyle={{ paddingBottom: 40 }}
+          contentContainerStyle={{
+            backgroundColor: '#fff',
+            paddingBottom: 40,
+          }}
           renderItem={({ item }) => (
             <HistoryCard
               record={item}

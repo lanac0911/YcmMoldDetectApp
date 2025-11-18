@@ -19,14 +19,14 @@ export function HistoryCard({
 }: Props) {
   return (
     <Card
-      elevate
+      elevation={0.5}
       bordered
       pressStyle={{ opacity: 0.9 }}
-      animation="bouncy"
       onPress={onPress}
       backgroundColor="white"
       br="$4"
       p="$3"
+      my="$2"
     >
       <XStack gap="$3" ai="center">
         {/* 縮圖 */}

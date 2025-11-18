@@ -6,6 +6,7 @@ export const YCM_COLORS = {
   white: '#FFFFFF',
   gray: '#6C757D',
   webHeader: '#003F35',
+  tabGreen: '#5CB98B',
 };
 
 export const theme = {

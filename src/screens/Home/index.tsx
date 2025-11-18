@@ -1,4 +1,3 @@
-// src/screens/Home/Home.tsx
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
