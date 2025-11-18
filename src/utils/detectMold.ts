@@ -56,8 +56,6 @@ export async function analyzeImageMold(
   imageUri: string,
 ): Promise<MoldDetectionResult> {
   try {
-    console.log('🔍 Starting mold detection for:', imageUri);
-
     const base64 = await convertToBase64(imageUri);
 
     const payload = {
@@ -122,7 +120,6 @@ export async function analyzeImageMold(
     });
 
     const json = await res.json();
-    console.log('📥 Vision Response:', JSON.stringify(json, null, 2));
 
     if (json.error) throw new Error(json.error.message);
 
