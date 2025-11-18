@@ -23,7 +23,7 @@ export function FilterTabs({
       orientation="horizontal"
       flexDirection="row"
       width="100%"
-      marginBottom="$3"
+      my="$3"
     >
       <Tabs.List
         flex={1}

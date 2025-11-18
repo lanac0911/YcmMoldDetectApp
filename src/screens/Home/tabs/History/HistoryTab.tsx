@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Alert, FlatList } from 'react-native';
-import { YStack } from 'tamagui';
+import { View, YStack } from 'tamagui';
 
 import {
   useDetectionHistory,
@@ -113,8 +113,8 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   }
 
   return (
-    <>
-      <YStack flex={1} backgroundColor="$background" px="$4">
+    <View flex={1} backgroundColor="$background">
+      <YStack flex={1} backgroundColor="$background" px="$4" mb="$4">
         {/* ▸ 篩選 Tabs */}
         <FilterTabs
           showFavoritesOnly={showFavoritesOnly}
@@ -156,6 +156,6 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
         onDelete={handleDeleteInDialog}
         formatFullDate={formatFullDate}
       />
-    </>
+    </View>
   );
 }
