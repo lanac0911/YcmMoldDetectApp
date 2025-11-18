@@ -9,6 +9,7 @@ import {
   Text,
   Button,
   Image,
+  View,
 } from 'tamagui';
 import { X } from '@tamagui/lucide-icons';
 import { YCM_COLORS } from '@styles/imgs/themes';
@@ -119,9 +120,19 @@ const Content = ({
 
           {/* 分類 */}
           {product.categories.length > 0 && (
-            <Text fontSize="$5">
-              分類： {product.categories.map(c => c.name).join(' / ')}
-            </Text>
+            <XStack gap="$2">
+              <Text fontSize="$5">分類：</Text>
+              <View
+                paddingHorizontal="$2.5"
+                paddingVertical="$1"
+                borderRadius={6}
+                backgroundColor={'$gray9'}
+              >
+                <Text fontSize="$1" color="white" letterSpacing={0.5}>
+                  {product.categories.map(c => c.name).join(' / ')}
+                </Text>
+              </View>
+            </XStack>
           )}
 
           {/* 描述 */}
