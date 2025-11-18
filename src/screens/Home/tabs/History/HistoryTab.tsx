@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Alert, FlatList } from 'react-native';
-import { View, YStack } from 'tamagui';
+import { View, YStack, XStack, Button, Text } from 'tamagui';
 
 import {
   useDetectionHistory,
@@ -14,13 +14,15 @@ import { RecordDetailDialog } from './components/RecordDetailDialog';
 import { formatDate, formatFullDate } from '@utils/date';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from 'navigation/AppNavigator';
+import { theme } from '@styles/imgs/themes';
 
 type HistoryTabProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
 };
 
 export default function HistoryTab({ navigation }: HistoryTabProps) {
-  const { records, toggleFavorite, removeRecord } = useDetectionHistory();
+  const { records, toggleFavorite, removeRecord, clearHistory } =
+    useDetectionHistory();
 
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
 
@@ -84,12 +86,31 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
     ]);
   };
 
-  // 更新後的 record（收藏切換後重新 sync）
   const currentRecord = selectedRecord
     ? records.find(r => r.id === selectedRecord.id)
     : null;
 
-  // 沒有任何紀錄（全部模式）
+  // 刪除全部紀錄
+  const handleClearAll = () => {
+    Alert.alert(
+      '清空全部歷史',
+      '您確定要刪除所有偵測紀錄嗎？此動作無法還原！',
+      [
+        { text: '取消', style: 'cancel' },
+        {
+          text: '刪除全部',
+          style: 'destructive',
+          onPress: () => {
+            clearHistory();
+            setPage(1);
+            setSelectedRecord(null);
+          },
+        },
+      ],
+    );
+  };
+
+  // 無紀錄（全部模式）
   if (!showFavoritesOnly && records.length === 0) {
     return <HistoryEmpty />;
   }
@@ -115,24 +136,34 @@ export default function HistoryTab({ navigation }: HistoryTabProps) {
   return (
     <View flex={1} backgroundColor="$background">
       <YStack flex={1} backgroundColor="$background" px="$4" mb="$4">
-        {/* ▸ 篩選 Tabs */}
-        <FilterTabs
-          showFavoritesOnly={showFavoritesOnly}
-          total={records.length}
-          favCount={records.filter(r => r.isFavorite).length}
-          onToggle={flag => {
-            setShowFavoritesOnly(flag);
-            setPage(1);
-          }}
-        />
+        <YStack justifyContent="flex-end" alignItems="center">
+          <FilterTabs
+            showFavoritesOnly={showFavoritesOnly}
+            total={records.length}
+            favCount={records.filter(r => r.isFavorite).length}
+            onToggle={flag => {
+              setShowFavoritesOnly(flag);
+              setPage(1);
+            }}
+          />
+
+          {/* 一鍵刪除按鈕 */}
+          {!showFavoritesOnly && filteredRecords.length > 0 && (
+            <Text
+              pressStyle={{ color: '$red5', scale: 0.98 }}
+              onPress={handleClearAll}
+              alignSelf="flex-end"
+              color={theme.error.color}
+            >
+              清空全部
+            </Text>
+          )}
+        </YStack>
 
         <FlatList
           data={paginatedRecords}
           keyExtractor={item => item.id}
-          contentContainerStyle={{
-            backgroundColor: '#fff',
-            paddingBottom: 40,
-          }}
+          contentContainerStyle={{ backgroundColor: '#fff', paddingBottom: 40 }}
           renderItem={({ item }) => (
             <HistoryCard
               record={item}
