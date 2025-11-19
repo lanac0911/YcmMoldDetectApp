@@ -43,32 +43,51 @@
 
 ```
 
-![專案截圖](md/allstruct.png)
+![專案截圖](md/struct.png)
 
 
 
----
+## 補充說明
 
 ###  🔐 環境變數（dotenv）
 
 使用 react-native-dotenv 管理 key, token 等敏感資料
 
 
----
+###  🐞 防呆機制
 
+1. 若 WooCommerce 商品圖片連結失效或載入失敗，自動切換為預設 placeholder 圖片
+2. OpenAI API 回傳錯誤處理
+  - 無網路連線時會避免跳警告框提示
+  - 辨識 API 回傳 timeout、解析錯誤或未知錯誤時，會顯示錯誤 Modal，並提供重試按鈕
+  - 針對常見錯誤提供明確提示（例如金鑰錯誤、網路中斷、API 使用率限制...）
+3. 圖片無法解析時的安全處理
+4. 刪除動作皆使用確認對話框
+
+
+<img src="md/errmodal.png" alt="專案截圖" width="40%" />
+
+
+
+## 頁面
 ### 📱 `src/screens/Welcome` - 歡迎頁面
 
 #### Welcome (歡迎頁)
 - 啟動動畫
 - 2.5 秒後自動跳轉
 
-![專案截圖](md/welcome.gif)
+<img src="md/welcome.gif" alt="專案截圖" width="40%" />
 
 ---
 
 ### 📱 `src/screens/Home` - 主頁
 
 **功能：** 包含兩個 Tab
+
+**若第一次使用/尚未授權相機：** 先取得授權同意
+
+<img src="md/permission.png" alt="專案截圖" width="30%" />
+
 
 #### **Tab 1：照片檢測**
 - **拍照功能**：用原生相機拍攝
@@ -187,3 +206,11 @@ styles/
 
 ---
 
+
+
+
+
+
+### 📹 Demo Videos
+
+[連結](https://www.dropbox.com/scl/fo/x5mooohm01aukk3tsnb4r/AHXE8qMTCRG-kbHiV0y22Ps?rlkey=gb1gmj7p15venax8ps6fauvlj&st=7yxt0udx&dl=0)
