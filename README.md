@@ -1,79 +1,189 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# YcmMoldDetectApp - 專案文檔
 
-# Getting Started
+## 📋 目錄總結構
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-## Step 1: Start the Metro Server
+```
+🗂️src/
+├── 🗂️components/                 # 共用 UI 元件（SafeArea等）
+│
+├── 🗂️navigation/                 # Navigation 設定
+│
+├── 🗂️screens/                    # App 主要畫面（一個資料夾一個頁面）
+│   ├── 🗂️Welcome/             
+│   ├── 🗂️Home/                   # 主頁
+│   │   ├── index.tsx
+│   │   ├── 🗂️components/         # 主頁的元件
+│   │   │   ├── ...
+│   │   └── 🗂️tabs/
+│   │       └── ...               # 主頁分兩個 tab
+│   │
+│   ├── 🗂️Result/                  # 檢測結果 + 商品推薦
+│   │   ├── 🗂️components/
+│   │   │   ├── ...
+│   │   └── 🗂️hooks/
+│   │       └── ... 
+│   │
+│   └── 🗂️Cart/                  # 購物車
+│
+├── 🗂️services/                  # API server
+│   ├── openai.ts                # ChatGPT OpenAI server
+│   └── apiManager.ts           # WooCommerce REST API server
+│
+├── 🗂️store/                     # 狀態管理（Zustand）
+│   ├── cartStore.ts             # 購物車
+│   ├── detectionHistoryStore.ts # 歷史紀錄
+│   └── wooProductsStore.ts      # 商品資料
+│
+├── 🗂️styles/                     # 共用樣式
+│
+├── 🗂️typedef/                    # 型別定義
+│
+└── 🗂️utils/                      # 工具函式（日期轉換等）
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
-
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Start your Application
+![專案截圖](md/allstruct.png)
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-### For Android
 
-```bash
-# using npm
-npm run android
+---
 
-# OR using Yarn
-yarn android
+###  🔐 環境變數（dotenv）
+
+使用 react-native-dotenv 管理 key, token 等敏感資料
+
+
+---
+
+### 📱 `src/screens/Welcome` - 歡迎頁面
+
+#### Welcome (歡迎頁)
+- 啟動動畫
+- 2.5 秒後自動跳轉
+
+![專案截圖](md/welcome.gif)
+
+---
+
+### 📱 `src/screens/Home` - 主頁
+
+**功能：** 包含兩個 Tab
+
+#### **Tab 1：照片檢測**
+- **拍照功能**：用原生相機拍攝
+- **相簿選擇**：從圖庫選現有照片
+- **AI 分析**：整合 ChatGPT API 進行霉菌檢測
+- **Loading Modal**：API response 前先顯示動畫
+- **錯誤提示**：API 失敗時顯示錯誤 Dialog
+
+![專案截圖](md/imgDetect.png)
+
+
+#### **Tab 2：歷史記錄**
+- **篩選功能**：切換「全部」與「我的最愛」
+- **收藏管理**：點擊愛心圖示切換收藏狀態
+- **記錄詳情**：點擊卡片開啟 Dialog 查看完整資訊
+- **刪除功能**：單筆刪除或清空全部
+- **動態載入**：每頁顯示 5 筆，滑到底部自動載入
+
+
+![專案截圖](md/history.png)
+
+---
+
+### 📱 `src/screens/Result` - 檢測結果頁
+
+**功能：** 顯示檢測結果＆推薦相關商品
+
+#### **主要功能**
+- **檢測結果展示**
+  - 顯示原始圖片
+  - 信心度等級（高/中/低）
+  - 配色（🔴/🟢/🟠/🩶）
+  - AI 的建議＆說明
+
+- **商品推薦**
+  - 串 WooCommerce API
+  - Card 顯示除霉/防霉商品，點擊 Card 跳出 Dialog 顯示其他資訊（圖片、名稱、價格、On Sale 特價標籤）
+  - Card 可點擊到其外部網址
+  - 動態載入：每次 3 筆，接近底部時會自動再撈 3 筆
+
+- **購物車功能**
+  - 商品 Card 可加減數量到購物車
+  - 底部結帳按鈕（顯示總金額與數量）
+  - 點擊結帳返回 Home 並開啟購物車
+
+- **收藏功能**
+  - 右上角愛心按鈕收藏此次檢測記錄
+
+![專案截圖](md/resultAndProduct.png)
+
+
+
+---
+
+
+
+### 📱 `src/screens/Result` - Cart Fab Button (購物車)
+
+**功能：** 
+
+  - 顯示購物車商品
+  - 加減數量 / 刪除 / 清空全部
+  - 計算「總金額 + 數量」
+  - 點擊「結帳」→ 關閉購物車 → 顯示成功 Dialog → 清空購物車
+
+![專案截圖](md/shoppingCarts.png)
+
+---
+
+### 🗄️ `src/store/` - 狀態管理
+
+- 使用 zustand
+
+| Store | 用途 |
+|-------|------|
+| `cartStore` | 購物車管理 | 
+| `detectionHistoryStore` | 檢測記錄 |
+| `wooProductsStore` | 商品資料 | 
+
+---
+
+### 🔧 `src/services/` - API 服務
+
+```
+services/
+├── openai.ts          // OpenAI API 配置
+└── apiManager.ts      // WooCommerce API 的 配置
+```
+---
+
+### 🎨 `src/styles/` - 樣式系統
+```
+styles/
+├── imgs/
+│   ├── main-logo.png
+│   └── themes.ts      // 顏色主題配置
+└── share.ts           // 共用樣式
 ```
 
-### For iOS
+---
 
-```bash
-# using npm
-npm run ios
+### 📦 `src/components/` - 共用 components
 
-# OR using Yarn
-yarn ios
-```
+- `SafeArea.tsx` - 安全區域
+- `ConfidenceResultCard.tsx` - 信心度結果卡片
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+---
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+### 🛠️ `src/utils/` - 工具函數
 
-## Step 3: Modifying your App
+| 工具 | 功能 |
+|------|------|
+| `detectMold.ts` | AI 霉菌檢測的呼叫與分析 |
+| `getConfidenceLevel.ts` | 根據檢測結果回傳對應的主題配色 |
+| `date.ts` | 日期格式化 |
 
-Now that you have successfully run the app, let's modify it.
+---
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
