@@ -70,6 +70,14 @@
 
 
 ## 頁面
+
+### App icon
+
+<img src="md/androidIcon.png" alt="專案截圖" width="10%" /> Android
+
+<img src="md/iosAppIcon.png" alt="專案截圖" width="10%" /> iOS
+
+
 ### 📱 `src/screens/Welcome` - 歡迎頁面
 
 #### Welcome (歡迎頁)
