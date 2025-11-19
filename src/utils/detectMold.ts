@@ -135,8 +135,6 @@ export async function analyzeImageMold(
       explanation: String(parsed.explanation) || '無說明',
     };
   } catch (err) {
-    console.error('❌ analyzeImageMold Error:', err);
-
     throw err;
   }
 }
