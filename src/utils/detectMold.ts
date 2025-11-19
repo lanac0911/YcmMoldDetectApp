@@ -137,10 +137,6 @@ export async function analyzeImageMold(
   } catch (err) {
     console.error('❌ analyzeImageMold Error:', err);
 
-    return {
-      isMoldy: false,
-      confidence: 0,
-      explanation: 'AI 無法分析圖片，請重新拍照',
-    };
+    throw err;
   }
 }

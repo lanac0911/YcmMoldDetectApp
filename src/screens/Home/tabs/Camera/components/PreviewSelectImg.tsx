@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Image, Alert } from 'react-native';
 import { YStack, Text, Button, Circle } from 'tamagui';
 import { Image as ImageIcon } from '@tamagui/lucide-icons';
@@ -10,6 +10,8 @@ import { analyzeImageMold } from '@utils/detectMold';
 import LoadingModal from '../modal/LoadingModal';
 import ErrorModal from '../modal/ErrorModal ';
 import RenderPreviewButton from './RenderPreviewButton';
+import { useFocusEffect } from '@react-navigation/native';
+import NetInfo from '@react-native-community/netinfo';
 
 interface PreviewSelectImgProps {
   selectedImage: string | null;
@@ -31,6 +33,7 @@ export default function PreviewSelectImg({
   const { hasPermission, requestPermission } = useCameraPermission();
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [hasInternet, setHasInternet] = useState(true);
 
   useEffect(() => {
     if (!hasPermission) {
@@ -42,10 +45,28 @@ export default function PreviewSelectImg({
     setSelectedImage(null);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      const netInfoSubscription = NetInfo.addEventListener(state => {
+        setHasInternet(state.isConnected);
+      });
+      return () => {
+        netInfoSubscription();
+      };
+    }, []),
+  );
+
   // 呼叫 ChatGPT openAPI 分析
   const handleAnalyze = async () => {
     if (!selectedImage) {
       Alert.alert('請選擇圖片', '請先拍照或從相簿選擇圖片');
+      return;
+    }
+
+    // 確認是否有網路連線
+    if (!hasInternet) {
+      setErrorMessage('目前沒有網路連線，請檢查網路後再試');
+      setShowErrorModal(true);
       return;
     }
 
